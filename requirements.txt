@@ -3,7 +3,6 @@ backcall==0.2.0
 certifi==2020.12.5
 chardet==4.0.0
 click==7.1.2
-cloudscraper==1.2.58
 decorator==5.0.7
 Flask==1.1.2
 gunicorn==20.0.4

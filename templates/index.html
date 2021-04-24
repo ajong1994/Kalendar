@@ -22,7 +22,7 @@
                                     <p class="card-text">Release Date: {{ show.released_at }}</p>
                                 </div>
                                 <div class="card-buttons">
-                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#dramaInfo" value="{{ show.url }}">See More</button>
+                                    <button type="button" class="btn btn-primary see-btn" data-toggle="modal" data-target="#dramaInfo" value="{{ show.url }}">See More</button>
                                 </div>
                             </div>
                         </div>
@@ -52,6 +52,7 @@
             </div>
         </div>
     </div>
+    <script src="index.js"></script>
 {% endblock %}
 
 

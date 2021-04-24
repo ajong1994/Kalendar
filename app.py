@@ -33,11 +33,17 @@ app.config["SESSION_TYPE"] = "filesystem"
 
 
 
-@app.route("/")
+@app.route("/", methods=["GET", "POST"])
 def index():
-    """Show list of shows"""
-    korean_shows = generate(2021,1)
-    return render_template("index.html", list=korean_shows)
+    """ when accessed via POST using see more button on cards """
+    if request.method == "POST":
+        specific_show = request.json
+        show_info = fetch(specific_show)
+        return show_info
+    else:
+        """Show list of shows"""
+        korean_shows = generate(2021,1)
+        return render_template("index.html", list=korean_shows)
 
 
 
