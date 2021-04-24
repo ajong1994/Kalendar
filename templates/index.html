@@ -6,60 +6,50 @@
 
 {% block main %}
     <div class="section index">
-        <h2>Stock Positions</h2>
-        <table style="margin: 20px auto">
-            <thead>
-                <tr>
-                    <th>Stock Symbol</th>
-                    <th>Quantity</th>
-                    <th>Price</th>
-                    <th>Value</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for stock in stocks %}
-                <tr>
-                    <td> {{ stock.name }} </td>
-                    <td> {{ stock.quantity }} </td>
-                    <td> {{ stock.price }} </td>
-                    <td> {{ stock.value | usd }} </td>
-                    <td> <input autocomplete="off" class="share_input" placeholder="No. of Shares" type="text"> </td>
-                    <td>
-                        <form action="/buy" method="post">
-                            <input name="symbol" type="hidden" value="{{ stock.name }}">
-                            <div>
-                            <input name="shares" type="hidden" value="" class="buy-input">
+        <h2>Airing and Upcoming Shows</h2>
+        <div class="row row-cols-1 row-cols-md-3">
+            {% for show in list %}
+                <div class="col mb-4">
+                    <div class="card h-100">
+                        <div class="row no-gutters">
+                            <div class="col-4">
+                                <img src="{{ show.thumbnail }}" class="card-img" alt="picture of {{ show.title }}">
                             </div>
-                            <button class="btn btn-primary" type="submit">Buy</button>
-                        </form>
-                    </td>
-                    <td>
-                        <form action="/sell" method="post">
-                            <input name="symbol" type="hidden" value="{{ stock.name }}">
-                            <div>
-                            <input name="shares" type="hidden" value="" class="sell-input">
+                            <div class="col-8">
+                                <div class="card-body card-detail">
+                                    <h5>{{ show.title }}</h5>
+                                    <p class="card-text">Episodes: {{ show.episodes }}</p>
+                                    <p class="card-text">Release Date: {{ show.released_at }}</p>
+                                </div>
+                                <div class="card-buttons">
+                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#dramaInfo" value="{{ show.url }}">See More</button>
+                                </div>
                             </div>
-                            <button class="btn btn-primary" type="submit">Sell</button>
-                        </form>
-                    </td>
-                </tr>
-                {% endfor %}
-                <tr>
-                    <td></td>
-                </tr>
-                <tr class="total-row">
-                    <td> Total </td>
-                    <td></td>
-                    <td></td>
-                    <td> {{ total | usd }} </td>
-                </tr>
-            </tbody>
-        </table>
-        <div id="current-cash">
-            Current Cash Balance : {{ cash | usd }}
-        </div>
-        <div>
-            Grand Total : {{ grand_total | usd }}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+
+            <!-- Modal -->
+            <div class="modal fade" id="dramaInfo" tabindex="-1" aria-labelledby="dramaInfoLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title" id="dramaInfoModalLabel">Modal Title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>
+                    <div class="modal-body">
+                        ...
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Add to Calendar</button>
+                    </div>
+                </div>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}
