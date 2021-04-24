@@ -5,7 +5,7 @@ from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from helper import apology, generate
+from helper import apology, generate, fetch
 
 # Configure application
 app = Flask(__name__)
@@ -37,7 +37,7 @@ app.config["SESSION_TYPE"] = "filesystem"
 def index():
     """ when accessed via POST using see more button on cards """
     if request.method == "POST":
-        specific_show = request.json
+        specific_show = request.json["handle"]
         show_info = fetch(specific_show)
         return show_info
     else:
