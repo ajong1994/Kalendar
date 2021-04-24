@@ -66,7 +66,7 @@ def fetch(drama_url):
     # Contact API
     try_counter = 0
     connection_error = True
-    while try_counter < 3 and connection_error == True:
+    while try_counter < 500 and connection_error == True:
         try:
             url = f"https://kuryana.vercel.app/id{drama_url}"
             response = requests.get(url)
