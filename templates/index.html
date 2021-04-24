@@ -1,0 +1,67 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Log In
+{% endblock %}
+
+{% block main %}
+    <div class="section index">
+        <h2>Stock Positions</h2>
+        <table style="margin: 20px auto">
+            <thead>
+                <tr>
+                    <th>Stock Symbol</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for stock in stocks %}
+                <tr>
+                    <td> {{ stock.name }} </td>
+                    <td> {{ stock.quantity }} </td>
+                    <td> {{ stock.price }} </td>
+                    <td> {{ stock.value | usd }} </td>
+                    <td> <input autocomplete="off" class="share_input" placeholder="No. of Shares" type="text"> </td>
+                    <td>
+                        <form action="/buy" method="post">
+                            <input name="symbol" type="hidden" value="{{ stock.name }}">
+                            <div>
+                            <input name="shares" type="hidden" value="" class="buy-input">
+                            </div>
+                            <button class="btn btn-primary" type="submit">Buy</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form action="/sell" method="post">
+                            <input name="symbol" type="hidden" value="{{ stock.name }}">
+                            <div>
+                            <input name="shares" type="hidden" value="" class="sell-input">
+                            </div>
+                            <button class="btn btn-primary" type="submit">Sell</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+                <tr>
+                    <td></td>
+                </tr>
+                <tr class="total-row">
+                    <td> Total </td>
+                    <td></td>
+                    <td></td>
+                    <td> {{ total | usd }} </td>
+                </tr>
+            </tbody>
+        </table>
+        <div id="current-cash">
+            Current Cash Balance : {{ cash | usd }}
+        </div>
+        <div>
+            Grand Total : {{ grand_total | usd }}
+        </div>
+    </div>
+{% endblock %}
+
+
