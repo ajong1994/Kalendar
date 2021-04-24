@@ -1,7 +1,6 @@
 import os
 import requests
 import urllib.parse
-import cloudscraper
 
 from flask import redirect, render_template, request
 
@@ -42,14 +41,14 @@ def generate(year, quarter):
             result_info = {}
             if result["content_type"] == "Korean Drama":
                 try: 
-                    result_info["title"] = result.setdefault("title", "None")
-                    result_info["episodes"] = result.setdefault("episodes", "None")
-                    result_info["type"] = result.setdefault("type", "None")
-                    result_info["synopsis"] = result.setdefault("synopsis", "None")
-                    result_info["released_at"] = result.setdefault("released_at", "None")
-                    result_info["url"] = result.setdefault("url", "None")
-                    result_info["genres"] = result.setdefault("genres", "None")
-                    result_info["thumbnail"] = result.setdefault("thumbnail", "None")
+                    result_info["title"] = result.setdefault("title", "N/A")
+                    result_info["episodes"] = result.setdefault("episodes", "N/A")
+                    result_info["type"] = result.setdefault("type", "N/A")
+                    result_info["synopsis"] = result.setdefault("synopsis", "N/A")
+                    result_info["released_at"] = result.setdefault("released_at", "N/A")
+                    result_info["url"] = result.setdefault("url", "N/A")
+                    result_info["genres"] = result.setdefault("genres", "N/A")
+                    result_info["thumbnail"] = result.setdefault("thumbnail", "N/A")
                     korean_shows.append(result_info)
                     temp_count += 1
                 except:
@@ -61,20 +60,37 @@ def generate(year, quarter):
         return(korean_shows)
 
 
-def fetch_drama(drama_url):
+def fetch(drama_url):
     """Get additional info of specific kdrama"""
 
     # Contact API
-    try:
-        url = f"https://kuryana.vercel.app/id{drama_url}"
-        response = requests.get(url)
-        response.raise_for_status()
-    except requests.RequestException:
-        return None
+    try_counter = 0
+    connection_error = True
+    while try_counter < 3 and connection_error == True:
+        try:
+            url = f"https://kuryana.vercel.app/id{drama_url}"
+            response = requests.get(url)
+            response.raise_for_status()
+            connection_error = False
+        except requests.RequestException:
+            try_counter += 1
+            return None
 
     # Parse response
     try:
         info = response.json()
+        return {
+            "title": info["data"].setdefault("title", "N/A"),
+            "rating": info["data"].setdefault("rating", "N/A"),
+            "poster": info["data"].setdefault("poster", "N/A"),
+            "synopsis": info["data"].setdefault("synopsis", "N/A"),
+            "cast": info["data"].setdefault("casts", "N/A"),
+            "episodes": info["data"]["details"].setdefault("episodes", "N/A"),
+            "start_date": info["data"]["details"].setdefault("aired", "N/A").split("-")[0],
+            "end_date": info["data"]["details"].setdefault("aired", "N/A").split("-")[1],
+            "aired_on": info["data"]["details"].setdefault("aired_on", "N/A"),
+            "network": info["data"]["details"].setdefault("original_network", "N/A")
+        }
     except (KeyError, TypeError, ValueError):
+        print("error")
         return None
-
