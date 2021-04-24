@@ -1,14 +1,15 @@
 import os
 import requests
 import urllib.parse
-from time import sleep
+import cloudscraper
 
 from flask import redirect, render_template, request
 
 
 
-def error(message, code=400):
+def apology(message, code=400):
     """Render message as an apology to user."""
+
     def escape(s):
         """
         Escape special characters.
@@ -31,7 +32,7 @@ def generate(year, quarter):
     except requests.RequestException:
         return None
 
-    # Parse 
+    # Parse response
     korean_shows = []
     korean_count = 0
     temp_count = 0
@@ -39,7 +40,7 @@ def generate(year, quarter):
         results = response.json()
         for result in results:
             result_info = {}
-            if result["content_type"] == "Korean Drama" or result["content_type"] == "Korean TV Show":
+            if result["content_type"] == "Korean Drama":
                 try: 
                     result_info["title"] = result.setdefault("title", "None")
                     result_info["episodes"] = result.setdefault("episodes", "None")
@@ -55,7 +56,25 @@ def generate(year, quarter):
                     return None      
     except (KeyError, TypeError, ValueError):
         return None
-    finally:
-        print(korean_shows)
+    
+    if len(korean_shows) != 0:
+        return(korean_shows)
 
-generate(2021, 1)
+
+def fetch_drama(drama_url):
+    """Get additional info of specific kdrama"""
+
+    # Contact API
+    try:
+        url = f"https://kuryana.vercel.app/id{drama_url}"
+        response = requests.get(url)
+        response.raise_for_status()
+    except requests.RequestException:
+        return None
+
+    # Parse response
+    try:
+        info = response.json()
+    except (KeyError, TypeError, ValueError):
+        return None
+
