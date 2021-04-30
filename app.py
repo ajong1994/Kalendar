@@ -1,4 +1,5 @@
 import os
+import json
 
 from flask import Flask, flash, redirect, render_template, request, session
 from tempfile import mkdtemp
@@ -29,12 +30,8 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 
 
-
-
-
-
-@app.route("/", methods=["GET", "POST"])
-def index():
+@app.route("/calendar", methods=["GET", "POST"])
+def calendar():
     """ when accessed via POST using see more button on cards """
     if request.method == "POST":
         specific_show = request.json["handle"]
@@ -42,8 +39,34 @@ def index():
         return show_info
     else:
         """Show list of shows"""
-        korean_shows = generate(2021,1)
-        return render_template("index.html", list=korean_shows)
+        return render_template("calendar.html")
+
+        
+@app.route("/refresh", methods=["POST"])
+def refresh():
+    """ when accessed via POST using see more button on cards """
+    current_quarter = request.json["quarter"]
+    show_list = json.dumps(generate(2021, current_quarter))
+    return show_list
+
+
+
+@app.route("/shows", methods=["GET", "POST"])
+def shows():
+    """ when accessed via POST using see more button on cards """
+    if request.method == "POST":
+        specific_show = request.json["handle"]
+        show_info = fetch(specific_show)
+        return show_info
+    else:
+        korean_shows = generate(2021,2)
+        return render_template("shows.html", list=korean_shows)
+
+
+
+@app.route("/", methods=["GET"])
+def index():
+    return render_template("index.html")
 
 
 

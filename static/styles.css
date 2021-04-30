@@ -86,3 +86,12 @@ main img
     border-radius: 5px;
     background:rgb(228, 228, 228);
 }
+
+
+@media only screen and (min-width: 768px) {
+    .quarter-selection {
+        display: flex;
+        justify-content: flex-end;
+    } 
+       
+}

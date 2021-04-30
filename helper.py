@@ -90,3 +90,4 @@ def check_url(url):
         return response
     except requests.RequestException:
         return 102
+
