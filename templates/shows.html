@@ -5,79 +5,75 @@
 {% endblock %}
 
 {% block main %}
-    <div class="section index">
+    <div class="section shows-container">
         <h2>Airing and Upcoming Shows</h2>
         <div class="quarter-selection my-5">
             <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                <label class="btn btn-primary active">
-                    <input type="radio" name="quarter-options" id="quarter-option1" value="1" checked> 
-                    <p class="quarter-option-header">Q1</p>
+                {% for i in range(4) %}
+                {% set id = "quarter-option" %}
+                <label class="btn btn-primary {{ "active" if quarter == loop.index }}">
+                    <input type="radio" name="quarter-options" id={{ "quarter-option" ~ loop.index }} value={{ loop.index }} {{ "checked" if quarter == loop.index }}> 
+                    <p class="quarter-option-header">Q{{ loop.index }} </p>
+                    {% if loop.index == 1 %}
                     <p class="quarter-option-subtext">Jan - Mar</p>
-                </label>
-                <label class="btn btn-primary">
-                    <input type="radio" name="quarter-options" id="quarter-option2" value="2">
-                    <p class="quarter-option-header">Q2</p>
+                    {% elif loop.index == 2 %}
                     <p class="quarter-option-subtext">Apr - Jun</p>
-                </label>
-                <label class="btn btn-primary">
-                    <input type="radio" name="quarter-options" id="quarter-option3" value="3">
-                    <p class="quarter-option-header">Q3</p>
+                    {% elif loop.index == 3 %}
                     <p class="quarter-option-subtext">Jul - Sep</p>
-                </label>
-                <label class="btn btn-primary">
-                    <input type="radio" name="quarter-options" id="quarter-option3" value="4">
-                    <p class="quarter-option-header">Q4</p>
-                    <p class="quarter-option-subtext">Oct - Dec</p> 
-                </label>
+                    {% else %}
+                    <p class="quarter-option-subtext">Oct - Dec</p>
+                    {% endif %}
+                </label>    
+                {% endfor %}
             </div>
         </div>
         <div class="row row-cols-1 row-cols-md-3">
-            {% for show in list %}
-                <div class="col mb-4">
-                    <div class="card h-100">
-                        <div class="row no-gutters">
-                            <div class="col-4">
-                                <img src="{{ show.thumbnail }}" class="card-img" alt="picture of {{ show.title }}">
+        {% for show in list %}
+            <div class="col mb-4">
+                <div class="card h-100">
+                    <div class="row no-gutters">
+                        <div class="col-4">
+                            <img src="{{ show.thumbnail }}" class="card-img" alt="picture of {{ show.title }}">
+                        </div>
+                        <div class="col-8">
+                            <div class="card-body card-detail">
+                                <h5>{{ show.title }}</h5>
+                                <p class="card-text">Episodes: {{ show.episodes }}</p>
+                                <p class="card-text">Release Date: {{ show.released_at }}</p>
                             </div>
-                            <div class="col-8">
-                                <div class="card-body card-detail">
-                                    <h5>{{ show.title }}</h5>
-                                    <p class="card-text">Episodes: {{ show.episodes }}</p>
-                                    <p class="card-text">Release Date: {{ show.released_at }}</p>
-                                </div>
-                                <div class="card-buttons">
-                                    <button type="button" class="btn btn-primary see-btn" data-toggle="modal" data-target="#dramaInfo" value="{{ show.url }}">See More</button>
-                                </div>
+                            <div class="card-buttons">
+                                <button type="button" class="btn btn-primary see-btn" data-toggle="modal" data-target="#dramaInfo" value="{{ show.url }}">See More</button>
                             </div>
                         </div>
                     </div>
                 </div>
-            {% endfor %}
-
-            <!-- Modal -->
-            <div class="modal fade" id="dramaInfo" tabindex="-1" aria-labelledby="dramaInfoLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                    <h5 class="modal-title" id="dramaInfoModalLabel">
-                        <div id="loading-title"></div>
-                    </h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                    </div>
-                    <div class="modal-body" id="dramaInfoModalBody">
-                        <div id="dramaInfoLine1"><div class="loading-line mb-4"></div></div>
-                        <div id="dramaInfoLine2"><div class="loading-line mb-4"></div></div>
-                        <div id="dramaInfoLine3"><div class="loading-line mb-4"></div></div>
-                        <div id="dramaInfoLine4"><div class="loading-line mb-4"></div></div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Add to Calendar</button>
-                    </div>
+            </div>
+        {% endfor %} 
+        </div>
+        <!-- Modal -->
+        <div class="modal fade" id="dramaInfo" tabindex="-1" aria-labelledby="dramaInfoModal" aria-hidden="true">
+            <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="dramaInfoModalLabel">
+                    <div id="loading-title"></div>
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
                 </div>
+                <div class="modal-body" id="dramaInfoModalBody">
+                    <div class="dramaInfoLine" id="dramaInfoLine1"><div class="loading-line mb-4"></div></div>
+                    <div class="dramaInfoLine" id="dramaInfoLine2"><div class="loading-line mb-4"></div></div>
+                    <div class="dramaInfoLine" id="dramaInfoLine3"><div class="loading-line mb-4"></div></div>
+                    <div class="dramaInfoLine" id="dramaInfoLine4"><div class="loading-line mb-4"></div></div>
+                    <div id="dramaInfoLine5"></div>
                 </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="AddtoCalendar">Add to Calendar</button>
+                </div>
+            </div>
             </div>
         </div>
     </div>

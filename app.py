@@ -1,12 +1,13 @@
 import os
 import json
 
-from flask import Flask, flash, redirect, render_template, request, session
+from flask import Flask, flash, redirect, render_template, request, session, jsonify
 from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
-
 from helper import apology, generate, fetch
+from getDate import year_now, quarter_now
+
 
 # Configure application
 app = Flask(__name__)
@@ -35,7 +36,7 @@ def calendar():
     """ when accessed via POST using see more button on cards """
     if request.method == "POST":
         specific_show = request.json["handle"]
-        show_info = fetch(specific_show)
+        show_info = jsonify(fetch(specific_show))
         return show_info
     else:
         """Show list of shows"""
@@ -45,8 +46,8 @@ def calendar():
 @app.route("/refresh", methods=["POST"])
 def refresh():
     """ when accessed via POST using see more button on cards """
-    current_quarter = request.json["quarter"]
-    show_list = json.dumps(generate(2021, current_quarter))
+    selected_quarter = request.json["quarter"]
+    show_list = jsonify(generate(year_now(), selected_quarter))
     return show_list
 
 
@@ -56,11 +57,12 @@ def shows():
     """ when accessed via POST using see more button on cards """
     if request.method == "POST":
         specific_show = request.json["handle"]
-        show_info = fetch(specific_show)
+        show_info = jsonify(fetch(specific_show))
         return show_info
     else:
-        korean_shows = generate(2021,2)
-        return render_template("shows.html", list=korean_shows)
+        korean_shows = generate(year_now(),quarter_now())
+        quarter = quarter_now()
+        return render_template("shows.html", list=korean_shows, quarter=quarter)
 
 
 
