@@ -95,3 +95,6 @@ main img
     } 
        
 }
+.shows-container {
+    overflow-x: hidden;
+}
