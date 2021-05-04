@@ -94,16 +94,42 @@ function modify_modal(data="None") {
 };
 
 // Localbase Script
-var db = new Localbase('db')
+var db = new Localbase('db');
+var buttonAddCalendar = document.getElementById('AddtoCalendar');
+buttonAddCalendar.addEventListener('click', async function() {
+    console.log(await checkdb())
+    if ( await checkdb() === undefined ) {
+        addtodb();
+    }
+});
 
-$("#AddtoCalendar").click(addtodb);
 
-function addtodb() {
+function addtodb(){
     db.collection('shows').add({
         title: show_data.title,
-        days: show_data.aired_on,
+        airing_days: show_data.aired_on,
         start_date: show_data.start_date,
-        airing_dates: show_data.air_date
+        airing_dates: show_data.air_date,
     })
 };
+
+async function checkdb() {
+    try {
+        let shows = await db.collection('shows')
+            .doc({ title: show_data.title})
+            .get()
+        return shows;
+    }
+    catch(error) {
+        console.log('error: ', error);
+    }
+};
+
+function readfromdb() {
+    db.collection('shows').get().then(shows => {
+        return shows;
+    });
+};
+
  
+
