@@ -5,26 +5,22 @@
 {% endblock %}
 
 {% block main %}
-    <div class="section calendar-container">
-        <div id='calendar'></div>
-    </div>
+  <div class="section calendar-container">
+    <table id="show-table"></table>
+    <div id="calendar"></div>
+  </div>
 
+  <script src="static/calendar.js"></script>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-          var calendarEl = document.getElementById('calendar');
-          var calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'dayGridMonth',
-            themeSystem:'bootstrap',
-            events: []
-          });
-          calendar.render();
-        });
+  <!-- fullcalendar.io -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.6.0/main.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.6.0/main.min.js"></script>
+  
+  <!-- rrule lib -->
+  <script src="https://cdn.jsdelivr.net/npm/rrule@2.6.6/dist/es5/rrule.min.js"></script>
 
-        function addEvent(event) {
-            calendar.addEvent(event);
-        }
-      </script>
+  <!-- the rrule-to-fullcalendar connector. must go AFTER the rrule lib -->
+  <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/rrule@5.6.0/main.global.min.js'></script>
 {% endblock %}
 
 
