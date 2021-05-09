@@ -3,7 +3,6 @@
 $(function refresh_list() {
     $("input[name='quarter-options']").click(function get_quarter_data() {
         let self = $(this);
-        console.log(self.val())
         $.ajax({
             type : "POST",
             url : "/refresh",
@@ -49,7 +48,7 @@ $(function refresh_list() {
 // initialize show_data global variable which can be used to store and access active show info
 var show_data;
 $(function fill_modal() {
-    $(".see-btn").click(function() {
+    $("body").on("click", ".see-btn", function() {
         modify_modal();
         let self = $(this);
         $.ajax({
@@ -85,7 +84,7 @@ function modify_modal(data="None") {
     else {
         $("#dramaInfoModalLabel").html(data.title);
         $("#dramaInfoLine1").html("Synopsis: " + data.synopsis);
-        $("#dramaInfoLine2").html("Cast: " + data.cast);
+        $("#dramaInfoLine2").html("Cast: " + data.cast.join(", "));
         $("#dramaInfoLine3").html("Airing dates: " + data.air_date);
         $("#dramaInfoLine4").html("Schedule: " + data.aired_on);
         $("#dramaInfoLine5").html("Genres: "+ data.genres);
@@ -94,28 +93,55 @@ function modify_modal(data="None") {
 };
 
 // Localbase Script
-var db = new Localbase('db');
-var buttonAddCalendar = document.getElementById('AddtoCalendar');
-buttonAddCalendar.addEventListener('click', async function() {
-    console.log(await checkdb())
+var db = new Localbase("db");
+var buttonAddCalendar = document.getElementById("AddtoCalendar");
+buttonAddCalendar.addEventListener("click", async function() {
+    // This async function waits for the promise from the checkdb function to
+    // make sure it's comparing the final result and not a premature undefined
     if ( await checkdb() === undefined ) {
+        // if title isn't in the db yet, add it
         addtodb();
     }
 });
 
 
-function addtodb(){
-    db.collection('shows').add({
-        title: show_data.title,
-        airing_days: show_data.aired_on,
-        start_date: show_data.start_date,
-        airing_dates: show_data.air_date,
-    })
+
+async function addtodb(){
+    var air_days_temp_array = show_data.aired_on.split(", ");
+    var air_days_array = air_days_temp_array.map(dayConvert);
+    var air_dates_temp_start = show_data.air_date.split(" - ")[0];
+    var air_dates_temp_end = show_data.air_date.split(" - ")[1];
+    var air_dates_start = dateConvert(air_dates_temp_start, show_data.airingtime).toISOString();
+    try {
+        var air_dates_end = dateConvert(air_dates_temp_end, show_data.airingtime).toISOString().split("T")[0];
+    } catch (TypeError) {
+        var air_dates_end = air_dates_start;
+    } finally {
+    //let airtime_hours = new Date(parseInt(show_data.airing_time)*1000).getHours();
+    //let airtime_minutes = new Date(parseInt(show_data.airing_time)*1000).getMinutes();
+    //let endtime_hours = new Date((parseInt(show_data.airing_time) + parseInt(show_data.duration)*60)*1000).getHours();
+    //let endtime_minutes = new Date((parseInt(show_data.airing_time) + parseInt(show_data.duration)*60)*1000).getMinutes();
+
+        await db.collection("shows").add({
+            title: show_data.title,
+            airing_days: show_data.aired_on,
+            airing_dates: show_data.air_date,
+            calendar_airDays: air_days_array,
+            calendar_startDate: air_dates_start,
+            calendar_endDate: air_dates_end,
+            localshowtime: new Date(parseInt(show_data.airing_time)*1000).toISOString(),
+            duration: parseInt(show_data.duration)*60*1000,
+            //airing_time: airtime_hours.toString().padStart(2, "0") + ":" + airtime_minutes.toString().padStart(2, "0"),
+            //end_time: endtime_hours.toString().padStart(2, "0") + ":" + endtime_minutes.toString().padStart(2, "0")
+        })
+    }
 };
 
+// This promise function checks the DB for the current title and returns undefined 
+// if the title is not yet in the DB.
 async function checkdb() {
     try {
-        let shows = await db.collection('shows')
+        let shows = await db.collection("shows")
             .doc({ title: show_data.title})
             .get()
         return shows;
@@ -125,11 +151,34 @@ async function checkdb() {
     }
 };
 
-function readfromdb() {
-    db.collection('shows').get().then(shows => {
-        return shows;
-    });
+function dayConvert(day) {
+    const days = [ "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+    if (days.indexOf(day) > -1) {
+        return days.indexOf(day);
+    }
+    else {
+        return 6;
+    }
 };
 
- 
+function dateConvert(date, epochtime) {
+    if (date === undefined ) {
+        return;
+    }
+    let month = date.replace("  "," ").split(" ")[0];
+    let day = Number(date.replace("  "," ").split(" ")[1].trim().replace(",",""));
+    let year = Number(date.replace("  "," ").split(" ")[2]);
+    let hour = new Date(parseInt(show_data.airing_time)*1000).getHours();
+    let mins = new Date(parseInt(show_data.airing_time)*1000).getMinutes();
+    let secs = 00;
+    const monthlist = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    if (monthlist.indexOf(month) > -1) {
+        month = monthlist.indexOf(month);
+    }
+    else {
+        month = 12;
+    }
+    let jsdate = new Date(year, month, day, hour, mins, secs);
+    return jsdate;
+};
 
