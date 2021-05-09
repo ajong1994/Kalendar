@@ -116,8 +116,11 @@ def crawl(slug):
         release = soup.find(string=re.compile("nextEpisodeAiring")).replace(";","").replace("var","").replace("nextEpisodeAiring = ","").strip()
         drama_info["airing_time"] = json.loads(release)["released_at"]
         drama_info["duration"] = json.loads(release)["duration"]
-
     except AttributeError:
+        print("Air time has passed.")
+        pass
+    except TypeError:
+        print("Air time has not yet been declared.")
         pass
 
     drama_json = {"data": drama_info}

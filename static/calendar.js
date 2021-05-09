@@ -65,27 +65,31 @@ function render_row([key, value]) {
 };
 
 function addEvent([key, value]) {
-    let endDate = new Date(Date.UTC(value.calendar_endDate.split("-")[0], value.calendar_endDate.split("-")[1] - 1, value.calendar_endDate.split("-")[2]));
-    console.log(endDate);
-    eventObj = {
-        title: value.title,
-        rrule: {
-            freq: "weekly",
-            byweekday: value.calendar_airDays,
-            dtstart: value.calendar_startDate,
-        },
-        duration: value.duration,
-        groupId: value.title,
-        editable: true,
-        displayEventTime: true
+    try {
+        let endDate = new Date(Date.UTC(value.calendar_endDate.split("-")[0], value.calendar_endDate.split("-")[1] - 1, value.calendar_endDate.split("-")[2]));
+        eventObj = {
+            title: value.title,
+            rrule: {
+                freq: "weekly",
+                byweekday: value.calendar_airDays,
+                dtstart: value.calendar_startDate,
+            },
+            duration: value.duration,
+            groupId: value.title,
+            editable: true,
+            displayEventTime: true
+        }
+        if (value.calendar_endDate !== value.calendar_startDate || value.calendar_endDate !== undefined) {
+            eventObj.rrule.until =  new Date(endDate.valueOf() + 24*60*60*1000)
+        } 
+        else {
+            eventObj.rrule.count = 1;
+        }
+        calendar.addEvent(eventObj);
+    } catch (TypeError) {
+        console.log("Invalid data being accessed.")
     }
-    if (value.calendar_endDate !== value.calendar_startDate) {
-        eventObj.rrule.until =  new Date(endDate.valueOf() + 24*60*60*1000)
-    } 
-    else {
-        eventObj.rrule.count = 1;
-    }
-    calendar.addEvent(eventObj);
+    
 }
 
 
