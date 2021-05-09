@@ -59,6 +59,7 @@ $(function fill_modal() {
             contentType: 'application/json;charset=UTF-8',
             success: function(data) {
                 show_data = data;
+                console.log(data);
                 modify_modal(data);
             },
             error:  function(data) {
@@ -89,6 +90,14 @@ function modify_modal(data="None") {
         $("#dramaInfoLine4").html("Schedule: " + data.aired_on);
         $("#dramaInfoLine5").html("Genres: "+ data.genres);
         $("#AddtoCalendar").prop("disabled", false);
+        try {
+            let errortest = dateConvert(data.air_date.split(" - ")[0], data.airingtime).toISOString();
+        } catch(RangeError) {
+            console.log("Data incomplete");
+            $("#AddtoCalendar").prop("disabled", true);
+            $("#AddtoCalendar").html("Data incomplete");
+        }
+        
     }
 };
 
@@ -111,17 +120,20 @@ async function addtodb(){
     var air_days_array = air_days_temp_array.map(dayConvert);
     var air_dates_temp_start = show_data.air_date.split(" - ")[0];
     var air_dates_temp_end = show_data.air_date.split(" - ")[1];
-    var air_dates_start = dateConvert(air_dates_temp_start, show_data.airingtime).toISOString();
+    try {
+        var air_dates_start = dateConvert(air_dates_temp_start, show_data.airingtime).toISOString();
+        
+    } catch (RangeError) {
+        // disable button if data isn't complete yet 
+        var addbutton = document.getElementById("AddtoCalendar");
+        addbutton.disabled = true;
+        addbutton.innerHTML = "Info Incomplete";
+    }
     try {
         var air_dates_end = dateConvert(air_dates_temp_end, show_data.airingtime).toISOString().split("T")[0];
     } catch (TypeError) {
         var air_dates_end = air_dates_start;
     } finally {
-    //let airtime_hours = new Date(parseInt(show_data.airing_time)*1000).getHours();
-    //let airtime_minutes = new Date(parseInt(show_data.airing_time)*1000).getMinutes();
-    //let endtime_hours = new Date((parseInt(show_data.airing_time) + parseInt(show_data.duration)*60)*1000).getHours();
-    //let endtime_minutes = new Date((parseInt(show_data.airing_time) + parseInt(show_data.duration)*60)*1000).getMinutes();
-
         await db.collection("shows").add({
             title: show_data.title,
             airing_days: show_data.aired_on,
@@ -130,10 +142,12 @@ async function addtodb(){
             calendar_startDate: air_dates_start,
             calendar_endDate: air_dates_end,
             localshowtime: new Date(parseInt(show_data.airing_time)*1000).toISOString(),
-            duration: parseInt(show_data.duration)*60*1000,
-            //airing_time: airtime_hours.toString().padStart(2, "0") + ":" + airtime_minutes.toString().padStart(2, "0"),
-            //end_time: endtime_hours.toString().padStart(2, "0") + ":" + endtime_minutes.toString().padStart(2, "0")
+            duration: parseInt(show_data.duration)*60*1000
         })
+        // Add success prompt here or button change
+        var addbutton = document.getElementById("AddtoCalendar");
+        addbutton.disabled = true;
+        addbutton.innerHTML = "Added";
     }
 };
 
