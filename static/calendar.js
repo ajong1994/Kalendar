@@ -61,6 +61,10 @@ document.addEventListener('DOMContentLoaded', async function() {
             db.collection("shows").doc({ id: showId }).delete()
             removeChildren(document.getElementById(table_row_id));
             document.getElementById(table_row_id).remove();
+            // Remove show events from calendar
+            while (calendar.getEventById(showId)) {
+                calendar.getEventById(showId).remove()
+            }
             // If no more exisiting rows, delete header and table then show alert.
             console.log(document.getElementsByClassName("calendar-remove"))
             if ( document.getElementsByClassName("calendar-remove").length === 0 ){
