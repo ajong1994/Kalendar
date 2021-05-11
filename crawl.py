@@ -123,6 +123,9 @@ def crawl(slug):
         print("Air time has not yet been declared.")
         pass
 
+    # finally, add input slug as drama url for id purposes
+    drama_info["url"] = slug
+
     drama_json = {"data": drama_info}
 
     return drama_json

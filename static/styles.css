@@ -46,6 +46,7 @@ main img
     max-width: 100%;
 }
 
+/*----- start of show page CSS -----*/
 .index th {
     padding: 0 20px;
 }
@@ -97,4 +98,14 @@ main img
 }
 .shows-container {
     overflow-x: hidden;
+}
+
+/*----- end of show page CSS -----*/
+
+/*----- start of calendar page CSS -----*/
+.calendar-remove {
+    color: transparent;
+    background-color: transparent;
+    border:none;
+    padding: 1px;
 }
