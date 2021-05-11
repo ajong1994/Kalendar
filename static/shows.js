@@ -75,12 +75,13 @@ $(function fill_modal() {
 });
 
 // Clears modal HTML and adds freshly pulled info
-function modify_modal(data="None") {
+async function modify_modal(data="None") {
     if (data == "None") {
         $("#dramaInfoModalLabel").html("<div id='loading-title'></div>");
         $(".dramaInfoLine").html("<div class='loading-line mb-4'></div>");
         $("#dramaInfoLine5").html("");
-        $("#AddtoCalendar").prop("disabled",true);
+        $("#AddShow").prop("hidden",true);
+        $("#RemoveShow").prop("hidden", true);
     }
     else {
         $("#dramaInfoModalLabel").html(data.title);
@@ -89,13 +90,21 @@ function modify_modal(data="None") {
         $("#dramaInfoLine3").html("Airing dates: " + data.air_date);
         $("#dramaInfoLine4").html("Schedule: " + data.aired_on);
         $("#dramaInfoLine5").html("Genres: "+ data.genres);
-        $("#AddtoCalendar").prop("disabled", false);
+        // This async function waits for the promise from the checkdb function to
+        // make sure it's comparing the final result and not a premature undefined
+        if (await checkdb() !== undefined) {
+            // If show found in database, display remove button
+            $("#RemoveShow").prop("hidden", false);
+            $("#AddShow").prop("hidden", true);
+        } else {
+            $("#AddShow").prop("hidden", false);
+        }
         try {
             let errortest = dateConvert(data.air_date.split(" - ")[0], data.airingtime).toISOString();
         } catch(RangeError) {
-            console.log("Data incomplete");
-            $("#AddtoCalendar").prop("disabled", true);
-            $("#AddtoCalendar").html("Data incomplete");
+            console.log("errortest");
+            $("#AddShow").prop("disabled", true);
+            $("#AddShow").html("Schedule Incomplete");
         }
         
     }
@@ -103,38 +112,31 @@ function modify_modal(data="None") {
 
 // Localbase Script
 var db = new Localbase("db");
-var buttonAddCalendar = document.getElementById("AddtoCalendar");
-buttonAddCalendar.addEventListener("click", async function() {
-    // This async function waits for the promise from the checkdb function to
-    // make sure it's comparing the final result and not a premature undefined
-    if ( await checkdb() === undefined ) {
-        // if title isn't in the db yet, add it
-        addtodb();
-    }
+var addbutton = document.getElementById("AddShow");
+var removebutton = document.getElementById("RemoveShow");
+addbutton.addEventListener("click", function() {
+    addtodb();
+});
+removebutton.addEventListener("click", function() {
+    deletefromdb();
 });
 
 
 
 async function addtodb(){
+    var show_id = Number(21 + show_data.url.split("-")[0].replace("/",""));
     var air_days_temp_array = show_data.aired_on.split(", ");
     var air_days_array = air_days_temp_array.map(dayConvert);
     var air_dates_temp_start = show_data.air_date.split(" - ")[0];
     var air_dates_temp_end = show_data.air_date.split(" - ")[1];
-    try {
-        var air_dates_start = dateConvert(air_dates_temp_start, show_data.airingtime).toISOString();
-        
-    } catch (RangeError) {
-        // disable button if data isn't complete yet 
-        var addbutton = document.getElementById("AddtoCalendar");
-        addbutton.disabled = true;
-        addbutton.innerHTML = "Info Incomplete";
-    }
+    var air_dates_start = dateConvert(air_dates_temp_start, show_data.airingtime).toISOString();
     try {
         var air_dates_end = dateConvert(air_dates_temp_end, show_data.airingtime).toISOString().split("T")[0];
     } catch (TypeError) {
         var air_dates_end = air_dates_start;
     } finally {
         await db.collection("shows").add({
+            id: show_id,
             title: show_data.title,
             airing_days: show_data.aired_on,
             airing_dates: show_data.air_date,
@@ -144,19 +146,19 @@ async function addtodb(){
             localshowtime: new Date(parseInt(show_data.airing_time)*1000).toISOString(),
             duration: parseInt(show_data.duration)*60*1000
         })
-        // Add success prompt here or button change
-        var addbutton = document.getElementById("AddtoCalendar");
-        addbutton.disabled = true;
-        addbutton.innerHTML = "Added";
+        // Hide add button and replace with remove button
+        addbutton.hidden = true;
+        removebutton.hidden = false;
     }
 };
 
 // This promise function checks the DB for the current title and returns undefined 
 // if the title is not yet in the DB.
 async function checkdb() {
+    var show_id = Number(21 + show_data.url.split("-")[0].replace("/",""));
     try {
         let shows = await db.collection("shows")
-            .doc({ title: show_data.title})
+            .doc({ id: show_id })
             .get()
         return shows;
     }
@@ -164,6 +166,19 @@ async function checkdb() {
         console.log('error: ', error);
     }
 };
+
+function deletefromdb() {
+    var show_id = Number(21 + show_data.url.split("-")[0].replace("/",""));
+    db.collection("shows").doc({ id: show_id }).delete()
+    // Hide remove button and replace with add button
+    removebutton.hidden = true;
+    addbutton.hidden = false;
+}
+
+function deletedb() {
+    // Show confirmation then delete
+    db.delete();
+}
 
 function dayConvert(day) {
     const days = [ "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];

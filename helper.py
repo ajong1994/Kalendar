@@ -82,6 +82,7 @@ def fetch(drama_url):
         info_parsed["duration"] = info_unparsed["data"].setdefault("duration", "0")
         info_parsed["network"] = info_unparsed["data"]["details"].setdefault("original_network", "N/A")
         info_parsed["genres"] = info_unparsed["data"]["others"].setdefault("genres", "N/A")
+        info_parsed["url"] = info_unparsed["data"].setdefault("url", "N/A")
         return info_parsed
     except (KeyError, TypeError, ValueError):
         return 104
