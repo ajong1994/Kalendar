@@ -23,7 +23,10 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
     
     // Generate table from DB
-    document.getElementById("show-table").innterHTML = "";
+    var table = document.getElementById("show-table");
+    while (table.firstChild) {
+        table.removeChild(table.firstChild);
+    }
     if (shows.length !== 0) {
         let table_row = document.createElement("tr");
         table_row.id = "table-row-0";
@@ -41,8 +44,9 @@ document.addEventListener('DOMContentLoaded', async function() {
         for (let j = 0; j < 6; j++) {
             document.getElementById("table-row-0").append(table_header[j]);
         }
+        document.getElementById("clear-all-btn").style.display = "block";
+        document.getElementById("sync-btn").style.display = "block";
     } else {
-        console.log("hi")
         document.getElementById("show-table").remove();
         document.getElementById("calendar-alert").hidden = false;
     }
@@ -50,31 +54,41 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Turns the JS object from the DB into an array of [key, value] arrays which the forEach function can loop over.
     Object.entries(shows).forEach(render_row);
     Object.entries(shows).forEach(addEvent);
-    console.log(calendar.getEvents())
+
 
     var removebutton = document.getElementsByClassName("calendar-remove");
-    for (let i = 0; i < removebutton.length; i++) {
+    var counter = 0;
+    for (let i = removebutton.length - 1; i >= 0; i--) {
         removebutton[i].addEventListener("click", function() {
             let table_row_id = "table-row-" + [i + 1]
             let showId = Number(removebutton[i].value)
             // Delete show from DB before deleting the element so that calling the removebutton doesn't return undefined
             db.collection("shows").doc({ id: showId }).delete()
-            removeChildren(document.getElementById(table_row_id));
-            document.getElementById(table_row_id).remove();
+            // Can't delete the row because it would include the button and shorten the array, thereby changing the index so hide rows instead
+            temp_row = document.getElementById(table_row_id);
+            while (temp_row.children.length > 1) {
+                temp_row.removeChild(temp_row.firstChild)
+            }
+            temp_row.hidden = true; 
             // Remove show events from calendar
             while (calendar.getEventById(showId)) {
                 calendar.getEventById(showId).remove()
             }
-            // If no more exisiting rows, delete header and table then show alert.
-            console.log(document.getElementsByClassName("calendar-remove"))
-            if ( document.getElementsByClassName("calendar-remove").length === 0 ){
-                removeChildren(document.getElementById("table-row-0"));
-                document.getElementById("table-row-0").remove();
+            counter = counter + 1;
+
+            // If all rows are hidden (kept track of by using counter), delete header and table then show alert.
+            if ( counter === removebutton.length ){
                 document.getElementById("show-table").remove();
                 document.getElementById("calendar-alert").hidden = false;
+                document.getElementById("buttonContainers").remove()
             }
         });
     };
+
+    document.getElementById("sync-btn").addEventListener("click", sync_calendar);
+    document.getElementById("clear-all-btn").addEventListener("click", clear_localcalendar);
+    document.getElementById("clearGoogle-btn").addEventListener("click", delete_fromGCal);
+    
 });
 
 
@@ -108,13 +122,12 @@ function render_row([key, value]) {
 
 function addEvent([key, value]) {
     try {
-        let endDate = new Date(Date.UTC(value.calendar_endDate.split("-")[0], value.calendar_endDate.split("-")[1] - 1, value.calendar_endDate.split("-")[2]));
         eventObj = {
             title: value.title,
             rrule: { 
                 freq: "weekly",
                 byweekday: value.calendar_airDays,
-                dtstart: value.calendar_startDate,
+                dtstart: value.calendar_startDateTime,
             },
             duration: value.duration,
             id: value.id,
@@ -122,25 +135,26 @@ function addEvent([key, value]) {
             editable: true,
             displayEventTime: true
         }
-        if (value.calendar_endDate !== value.calendar_startDate || value.calendar_endDate !== undefined) {
-            eventObj.rrule.until =  new Date(endDate.valueOf() + 24*60*60*1000)
+        if (value.calendar_endDate !== value.calendar_startDateTime) {
+            //let endDate = new Date(Date.UTC(value.calendar_endDate.split("-")[0], value.calendar_endDate.split("-")[1] - 1, value.calendar_endDate.split("-")[2]));
+            //eventObj.rrule.until =  new Date(endDate.valueOf() + 24*60*60*1000)
+            eventObj.rrule.until =  value.calendar_endRecur;
         } 
         else {
             eventObj.rrule.count = 1;
         }
         calendar.addEvent(eventObj);
     } catch (TypeError) {
-        console.log("Invalid data being accessed.")
+        console.log(TypeError)
     }
-    
 }
 
-function removeChildren(parent) {
-    while (parent.lastChild) {
-        parent.removeChild(parent.lastChild);
-    }
-};
-
+function clear_localcalendar() {
+    db.collection("shows").delete()
+    document.getElementById("show-table").remove();
+    document.getElementById("calendar-alert").hidden = false;
+    document.getElementById("buttonContainers").remove()
+}
 
 
 

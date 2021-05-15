@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Log In
+    Shows
 {% endblock %}
 
 {% block main %}
@@ -9,22 +9,12 @@
         <h2>Airing and Upcoming Shows</h2>
         <div class="quarter-selection my-5">
             <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                {% for i in range(4) %}
-                {% set id = "quarter-option" %}
-                <label class="btn btn-primary {{ "active" if quarter == loop.index }}">
-                    <input type="radio" name="quarter-options" id={{ "quarter-option" ~ loop.index }} value={{ loop.index }} {{ "checked" if quarter == loop.index }}> 
-                    <p class="quarter-option-header">Q{{ loop.index }} </p>
-                    {% if loop.index == 1 %}
-                    <p class="quarter-option-subtext">Jan - Mar</p>
-                    {% elif loop.index == 2 %}
-                    <p class="quarter-option-subtext">Apr - Jun</p>
-                    {% elif loop.index == 3 %}
-                    <p class="quarter-option-subtext">Jul - Sep</p>
-                    {% else %}
-                    <p class="quarter-option-subtext">Oct - Dec</p>
-                    {% endif %}
-                </label>    
-                {% endfor %}
+                <label class="btn btn-primary" active>
+                    <input type="radio" name="list-options" id="current-show-list" value="current" checked> Current Season
+                </label>
+                <label class="btn btn-primary">
+                    <input type="radio" name="list-options" id="upcoming-show-list" value="upcoming"> Upcoming Season
+                </label>        
             </div>
         </div>
         <div class="row row-cols-1 row-cols-md-3">
@@ -79,12 +69,6 @@
         </div>
     </div>
     <script src="static/shows.js"></script>
-    <script src="static/oauth.js"></script>
-    <script async defer src="https://apis.google.com/js/api.js"
-        onload="this.onload=function(){};handleClientLoad()"
-        onreadystatechange="if (this.readyState === 'complete') this.onload()">
-    </script>
-
 
 {% endblock %}
 

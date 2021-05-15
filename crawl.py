@@ -6,15 +6,16 @@ import re
 
 
 
-drama_info = {}
-drama_info["synopsis"] = "N/A"
-drama_info["casts"] = []
-headers = {
+
+
+def crawl(slug):
+    drama_info = {}
+    drama_info["synopsis"] = "N/A"
+    drama_info["casts"] = []
+    headers = {
             "Referer": "https://mydramalist.com",
             "User-Agent": "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.123 Mobile Safari/537.36",
         }
-
-def crawl(slug):
     while True:
         try:
             scraper = cloudscraper.create_scraper()

@@ -13,9 +13,26 @@ now_utc = pytz.utc.localize(datetime.datetime.utcnow())
 now_local = now_utc.astimezone(pytz.timezone(local_tz))
 
 def quarter_now():
-    quarter = int(now_local.month / 4) + 1
+    quarter = int(now_local.month / 3 ) + (now_local.month % 3 > 0)
     return quarter
 
 def year_now():
     return now_local.year
 
+def quarter_next1():
+    if ((int(now_local.month / 3 ) + (now_local.month % 3 > 0) + 1) > 4):
+        quarter1 = 1
+    else: 
+        quarter1 = int(now_local.month / 3 ) + (now_local.month % 3 > 0) + 1
+    return quarter1
+ 
+
+def quarter_next2():
+    if ((int(now_local.month / 3 ) + (now_local.month % 3 > 0) + 2) > 4):
+        quarter2 = (int(now_local.month / 3 ) + (now_local.month % 3 > 0) + 2) % 4
+    else: 
+        quarter2 = int(now_local.month/ 3 ) + (now_local.month % 3 > 0) + 2
+    return quarter2
+
+def year_next():
+    return int(now_local.year + 1)

@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Log In
+    Calendar
 {% endblock %}
 
 {% block main %}
@@ -10,7 +10,72 @@
     <div class="alert alert-danger" id="calendar-alert" role="alert" hidden>
       A simple danger alert with <a href="#" class="alert-link">an example link</a>. Give it a click if you like.
     </div>
+    <div id="buttonContainers"> 
+      <button type="button" class="btn btn-danger" id="clearGoogle-btn" style="display:none">Clear List on Google</button>
+      <button type="button" class="btn btn-light" id="clear-all-btn" style="display:none">Clear Local List</button>
+      <button type="button" class="btn btn-primary" id="sync-btn" style="display:none">Sync to Google Calendar</button>
+    </div>
+
     <div id="calendar"></div>
+  </div>
+  <!-- Modal -->
+  <div class="modal fade" id="accessModal" tabindex="-1" aria-labelledby="accesseModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title" id="accessModalLabel">
+            Access Authorization
+        </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+        <div class="modal-body" id="accessModalBody">
+            <div> Kalendar needs permission to access your Google Calendar. Syncing and deleting events will not be possible unless you are logged in and authorize our use of your information.</div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" id="access-btn">Grant Access</button>
+        </div>
+    </div>
+    </div>
+  </div>
+  <div aria-live="polite" aria-atomic="true">
+    <div id="SuccessAddToast" class="toast hide" aria-atomic="true" data-delay="2000" style="position: absolute; top: 0; right: 0; z-index: 5;">
+      <div class="toast-header">
+        <strong class="mr-auto">&#127881; &nbsp; Sync Success</strong>
+        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="toast-body">
+        You've successfully added new shows to your Kalendar on Google Calendar!
+      </div>
+    </div>
+    <div id="SuccessDeleteToast" class="toast hide" aria-atomic="true" data-delay="2000" style="position: absolute; top: 0; right: 0; z-index: 5;">
+      <div class="toast-header">
+        <strong class="mr-auto">&#127881; &nbsp; Delete Success</strong>
+        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="toast-body">
+        You've successfully cleared your Kalendar on Google Calendar.
+      </div>
+    </div>
+  </div>
+  <div aria-live="assertive" aria-atomic="true" role="alert">
+    <div id="FailDeleteToast" class="toast hide" aria-atomic="true" data-delay="2000" style="position: absolute; top: 0; right: 0; z-index: 5;">
+      <div class="toast-header">
+        <strong class="mr-auto">&#9940; &nbsp; Clear Failed</strong>
+        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="toast-body">
+        You currently don't have a Kalendar on your Google Calendar.
+      </div>
+    </div>
   </div>
 
   <script src="static/calendar.js"></script>
