@@ -1,16 +1,33 @@
+// Initialize toasts for response
+$('.toast').toast()
 
-// Client ID and API key from the Developer Console
-var CLIENT_ID = '<YOUR_CLIENT_ID>';
-var API_KEY = '<YOUR_API_KEY>';
+// Client ID and API key via AJAX call from server
+var CLIENT_ID1;
+var CLIENT_ID2;
+var API_KEY;
+$.ajax({
+  type : "POST",
+  url : "/",
+  contentType: 'application/json;charset=UTF-8',
+  success: function(data) {
+    CLIENT_ID1 = data.GC_ID1;
+    CLIENT_ID2 = data.GC_ID2;
+    API_KEY = data.API_KEY;
+  },
+  error:  function(data) {
+    console.log("error getting API keys")
+  }
+});
+
 
 // Array of API discovery doc URLs for APIs used by the quickstart
 var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
 
 // Authorization scopes required by the API; multiple scopes can be
 // included, separated by spaces.
-var SCOPES = "https://www.googleapis.com/auth/calendar.events";
+var SCOPES = "https://www.googleapis.com/auth/calendar";
 
-var authorizeButton = document.getElementById('authorize_button');
+var loginButton = document.getElementById('login_button');
 var signoutButton = document.getElementById('signout_button');
 
 /**
@@ -24,22 +41,26 @@ function handleClientLoad() {
  *  Initializes the API client library and sets up sign-in state
  *  listeners.
  */
+ /*gapi.auth.authorize({client_id: clientId, scope: scopes, immediate: true}, callbackAuthResult);*/
+  
+var GoogleAuth;
 function initClient() {
   gapi.client.init({
     apiKey: API_KEY,
-    clientId: CLIENT_ID,
+    clientId: CLIENT_ID1 + "-" + CLIENT_ID2 + ".apps.googleusercontent.com",
     discoveryDocs: DISCOVERY_DOCS,
     scope: SCOPES
   }).then(function () {
     // Listen for sign-in state changes.
-    gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
+    GoogleAuth = gapi.auth2.getAuthInstance();
+    GoogleAuth.isSignedIn.listen(updateSigninStatus);
 
     // Handle the initial sign-in state.
-    updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
-    authorizeButton.onclick = handleAuthClick;
+    updateSigninStatus(GoogleAuth.isSignedIn.get());
+    loginButton.onclick = handleAuthClick;
     signoutButton.onclick = handleSignoutClick;
   }, function(error) {
-    appendPre(JSON.stringify(error, null, 2));
+    alert(JSON.stringify(error, null, 2));
   });
 }
 
@@ -49,12 +70,16 @@ function initClient() {
  */
 function updateSigninStatus(isSignedIn) {
   if (isSignedIn) {
-    authorizeButton.style.display = 'none';
-    signoutButton.style.display = 'block';
-    listUpcomingEvents();
+    loginButton.style.display = "none";
+    signoutButton.style.display = "block";
+    document.getElementById("clearGoogle-btn").style.display = "block";
+    $("#accessModal").modal('hide')
+    // Add bootstrap toast to signify login
   } else {
-    authorizeButton.style.display = 'block';
-    signoutButton.style.display = 'none';
+    loginButton.style.display = "block";
+    signoutButton.style.display = "none";
+    document.getElementById("clearGoogle-btn").style.display = "none";
+    // Add bootstrap toast to signify logout
   }
 }
 
@@ -62,58 +87,203 @@ function updateSigninStatus(isSignedIn) {
  *  Sign in the user upon button click.
  */
 function handleAuthClick(event) {
-  gapi.auth2.getAuthInstance().signIn();
+  GoogleAuth.signIn();
 }
 
 /**
  *  Sign out the user upon button click.
  */
 function handleSignoutClick(event) {
-  gapi.auth2.getAuthInstance().signOut();
+  GoogleAuth.signOut();
 }
 
-/**
- * Append a pre element to the body containing the given message
- * as its text node. Used to display the results of the API call.
- *
- * @param {string} message Text to be placed in pre element.
- */
-function appendPre(message) {
-  var pre = document.getElementById('content');
-  var textContent = document.createTextNode(message + '\n');
-  pre.appendChild(textContent);
-}
 
-/**
- * Print the summary and start datetime/date of the next ten events in
- * the authorized user's calendar. If no events are found an
- * appropriate message is printed.
- */
-function listUpcomingEvents() {
-  gapi.client.calendar.events.list({
-    'calendarId': 'primary',
-    'timeMin': (new Date()).toISOString(),
-    'showDeleted': false,
-    'singleEvents': true,
-    'maxResults': 10,
-    'orderBy': 'startTime'
-  }).then(function(response) {
-    var events = response.result.items;
-    appendPre('Upcoming events:');
+async function sync_calendar() {
+  var shows;
+  try {
+    shows = await db.collection("shows").get()
+  } 
+  catch(error) {
+      console.log('error: ', error);
+  }
+  
+  if (GoogleAuth.isSignedIn.get()) {
+    gapi.auth.authorize({
+      client_id: CLIENT_ID1 + "-" + CLIENT_ID2 + ".apps.googleusercontent.com",
+      scope: SCOPES,
+      immediate: true
+      }, handleAuthResult);
+    
+    function handleAuthResult (authResult) {
+      if (authResult && !authResult.error) {
+        // Create a named function which will make an add event request to Google Calendar for every event in the events array
+        function add_event(calendar_id) {
+          var checkcal = new Promise (function(events) {
+            var eventslist = [];
+            var list_request = gapi.client.calendar.events.list({
+              "calendarId": calendar_id,
+            });
+            list_request.execute(function(response){
+              for (let i = 0; i < response.items.length; i++) {
+                eventslist.push(response.items[i].summary)
+                events(eventslist)
+              }
+              if (response.items.length == 0) {
+                events(eventslist)
+              }
+            })
+          })
+         
+          checkcal.then(function(events){
+            addtoGoogle(events);
+          });
 
-    if (events.length > 0) {
-      for (i = 0; i < events.length; i++) {
-        var event = events[i];
-        var when = event.start.dateTime;
-        if (!when) {
-          when = event.start.date;
-        }
-        appendPre(event.summary + ' (' + when + ')')
+          function addtoGoogle(eventslist) {
+            // Create a function to add an event object to gcal_events array for every show in localbase
+            // Currently uses count to add event instances but should change it to end date so that netflix shows only show up once
+            for (let i = 0; i < shows.length; i++) {
+              console.log(eventslist)
+              console.log(shows[i].title)
+              if (eventslist.indexOf(shows[i].title) == -1) {
+                var gcal_events = {
+                  "summary": shows[i].title,
+                  "start": {
+                    "dateTime": shows[i].calendar_startDateTime,
+                    "timeZone": "UTC"
+                  },
+                  "end": { 
+                    "dateTime": shows[i].calendar_endDateTime,
+                    "timeZone": "UTC"
+                  },
+                  "recurrence": [
+                    "RRULE:FREQ=WEEKLY;UNTIL=" + shows[i].calendar_endRecur + ";BYDAY=" + shows[i].airing_days + ";WKST=MO"
+                  ],
+                  "description": "Shown on" + shows[i].network
+                }
+                console.log(eventslist.indexOf(shows[i].title))
+                console.log(shows[i].title + " ran")
+                var add_request = gapi.client.calendar.events.insert({
+                  "calendarId": calendar_id,
+                  "resource": gcal_events
+                }, headers='Content-Type: application/json');
+
+                add_request.execute(function(response){
+                  $("#SuccessAddToast").toast("show");
+                }); 
+              } 
+            }
+          };
+        };   
+        var getcalendarList = new Promise(function(myResolve) {
+          var calendar_id;
+          var request = gapi.client.calendar.calendarList.list();
+          request.execute(async function(response) {
+            // Get list of calendars from user's calendars and look for "Kalendar KDrama"
+            var calendars = response.items;
+            for (let i = 0; i < calendars.length; i++) {
+              // Loop through calendars and look for "Kalendar Kdrama" which we'll use to inject KDrama events
+              if (calendars[i].summary === "Kalendar KDramas") {
+                // return with calendar ID
+                var calendar_id = calendars[i].id
+                myResolve(calendar_id);
+                break
+              } 
+            }
+            if (calendar_id === undefined) {
+              // If no "Kalendar KDramas" is found, make one
+              var create_cal_request = gapi.client.calendar.calendars.insert({
+                "summary": "Kalendar KDramas"
+              });
+              create_cal_request.execute(function(response){
+                var calendar_id = response.id
+                myResolve(calendar_id);
+              })
+            }
+          });
+        });
+        getcalendarList.then(function(result) {
+          add_event(result)
+        });
+      } else {
+        console.log("Unauthorized.")
       }
-    } else {
-      appendPre('No upcoming events found.');
     }
-  });
+  } else {
+    $("#accessModal").modal('show')
+    document.getElementById("access-btn").addEventListener("click", GoogleAuth.signIn);
+  }
+
+
 }
 
+function delete_fromGCal() {
+  if (GoogleAuth.isSignedIn.get()) {
+    gapi.auth.authorize({
+      client_id: CLIENT_ID1 + "-" + CLIENT_ID2 + ".apps.googleusercontent.com",
+      scope: SCOPES,
+      immediate: true
+      }, handleAuthResult);
+    
+    function handleAuthResult (authResult) {
+      if (authResult && !authResult.error) {
 
+        function clear_cal(calendar_id) {
+          console.log(calendar_id)
+          var clear_request = gapi.client.calendar.calendars.delete({
+            "calendarId": calendar_id,
+          });
+          clear_request.execute(function(response){
+            $("#SuccessDeleteToast").toast("show");
+          });
+        }
+        var getcalendarList = new Promise(function(myResolve, myReject) {
+          var calendar_id;
+          var request = gapi.client.calendar.calendarList.list();
+          request.execute(async function(response) {
+            // Get list of calendars from user's calendars and look for "Kalendar KDrama"
+            var calendars = response.items;
+            for (let i = 0; i < calendars.length; i++) {
+              // Loop through calendars and look for "Kalendar Kdrama" which we'll use to inject KDrama events
+              if (calendars[i].summary === "Kalendar KDramas") {
+                // return with calendar ID
+                var calendar_id = calendars[i].id
+                myResolve(calendar_id);
+                break
+              } 
+            }
+            if (calendar_id === undefined) {
+              // If no "Kalendar KDramas" is found, return and alert
+                myReject("No Kalendar found.");
+            }
+          });
+        });
+        getcalendarList.then(function(resolve) {
+          clear_cal(resolve)
+        }, function(reject) {
+          $("#FailDeleteToast").toast("show");
+        });
+      } else {
+        console.log("Unauthorized.")
+      }
+    }
+  } else {
+    $("#accessModal").modal('show')
+    document.getElementById("access-btn").addEventListener("click", GoogleAuth.signIn());
+  }
+
+}
+
+  
+ 
+
+
+ 
+
+
+  
+
+
+
+
+
+ 

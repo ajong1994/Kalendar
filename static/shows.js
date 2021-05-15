@@ -1,13 +1,13 @@
 
 // Uses ajax to refresh show list depending on quarter and year chosen
 $(function refresh_list() {
-    $("input[name='quarter-options']").click(function get_quarter_data() {
+    $("input[name='list-options']").click(function get_list_data() {
         let self = $(this);
         $.ajax({
             type : "POST",
             url : "/refresh",
             dataType: "json",
-            data: JSON.stringify({quarter: self.val()}),
+            data: JSON.stringify({list: self.val()}),
             contentType: 'application/json;charset=UTF-8',
             success: function(data) {
                 let arr = data;
@@ -82,6 +82,7 @@ async function modify_modal(data="None") {
         $("#dramaInfoLine5").html("");
         $("#AddShow").prop("hidden",true);
         $("#RemoveShow").prop("hidden", true);
+        $("#AddShow").html("Add");
     }
     else {
         $("#dramaInfoModalLabel").html(data.title);
@@ -98,9 +99,16 @@ async function modify_modal(data="None") {
             $("#AddShow").prop("hidden", true);
         } else {
             $("#AddShow").prop("hidden", false);
+            $("#AddShow").prop("disabled", false);
         }
+        // If show has an undefined ending date, a "?" from source, display schedule incomplete
         try {
-            let errortest = dateConvert(data.air_date.split(" - ")[0], data.airingtime).toISOString();
+            if (data.network.split(" ")[0] == "Netflix") {
+                let errortest = dateConvert(data.air_date.split(" - ")[0]).toISOString();
+            } else {
+                let errortest = dateConvert(data.air_date.split(" - ")[0], data.airingtime).toISOString();
+                let errortest2 = dateConvert(data.air_date.split(" - ")[1], data.airingtime).toISOString();
+            }    
         } catch(RangeError) {
             console.log("errortest");
             $("#AddShow").prop("disabled", true);
@@ -124,27 +132,38 @@ removebutton.addEventListener("click", function() {
 
 
 async function addtodb(){
+    if (show_data.airing_time == "N/A") {
+        show_data.airing_time = Date.parse(dateConvert(show_data.air_date).toISOString()) / 1000;
+    }
     var show_id = Number(21 + show_data.url.split("-")[0].replace("/",""));
     var air_days_temp_array = show_data.aired_on.split(", ");
     var air_days_array = air_days_temp_array.map(dayConvert);
     var air_dates_temp_start = show_data.air_date.split(" - ")[0];
     var air_dates_temp_end = show_data.air_date.split(" - ")[1];
-    var air_dates_start = dateConvert(air_dates_temp_start, show_data.airingtime).toISOString();
+    var air_dates_start = dateConvert(air_dates_temp_start, show_data.airing_time).toISOString();
+    var shortened_days = air_days_temp_array.map(shortenDay);
     try {
-        var air_dates_end = dateConvert(air_dates_temp_end, show_data.airingtime).toISOString().split("T")[0];
+        var calendar_endRecur = dateConvert(air_dates_temp_end, show_data.airing_time, show_data.duration).toISOString().replace(/-/g,"").replace(/:/g,"").replace(/.000Z/g, "Z");
+    } catch (TypeError) {
+        var calendar_endRecur = air_dates_start.replace(/-/g,"").replace(/:/g,"").replace(/.000Z/g, "Z");
+    }
+    try {
+        var air_dates_end = dateConvert(air_dates_temp_end, show_data.airing_time, show_data.duration).toISOString().split("T")[0];
     } catch (TypeError) {
         var air_dates_end = air_dates_start;
     } finally {
         await db.collection("shows").add({
             id: show_id,
             title: show_data.title,
-            airing_days: show_data.aired_on,
+            airing_days: shortened_days,
             airing_dates: show_data.air_date,
             calendar_airDays: air_days_array,
-            calendar_startDate: air_dates_start,
+            calendar_startDateTime: air_dates_start,
             calendar_endDate: air_dates_end,
+            calendar_endRecur: calendar_endRecur,
             localshowtime: new Date(parseInt(show_data.airing_time)*1000).toISOString(),
-            duration: parseInt(show_data.duration)*60*1000
+            duration: parseInt(show_data.duration)*60*1000,
+            calendar_endDateTime: dateConvert(air_dates_temp_start,show_data.airing_time,show_data.duration).toISOString(),
         })
         // Hide add button and replace with remove button
         addbutton.hidden = true;
@@ -181,7 +200,7 @@ function deletedb() {
 }
 
 function dayConvert(day) {
-    const days = [ "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+    const days = [ "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" ];
     if (days.indexOf(day) > -1) {
         return days.indexOf(day);
     }
@@ -190,15 +209,26 @@ function dayConvert(day) {
     }
 };
 
-function dateConvert(date, epochtime) {
+function shortenDay(day) {
+    const days = [ "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" ]
+    const sdays = [ "MO", "TU", "WE", "TH", "FR", "SA", "SU" ]
+    if (days.indexOf(day) > -1) {
+        return sdays[days.indexOf(day)];
+    }
+    else {
+        return "SU";
+    }
+}
+
+function dateConvert(date,airing_time=0, duration=0) {
     if (date === undefined ) {
         return;
     }
     let month = date.replace("  "," ").split(" ")[0];
     let day = Number(date.replace("  "," ").split(" ")[1].trim().replace(",",""));
     let year = Number(date.replace("  "," ").split(" ")[2]);
-    let hour = new Date(parseInt(show_data.airing_time)*1000).getHours();
-    let mins = new Date(parseInt(show_data.airing_time)*1000).getMinutes();
+    let hour = new Date(parseInt(airing_time)*1000 + (duration*60*1000)).getHours();
+    let mins = new Date(parseInt(airing_time)*1000 + (duration*60*1000)).getMinutes();
     let secs = 00;
     const monthlist = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     if (monthlist.indexOf(month) > -1) {

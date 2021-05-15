@@ -6,6 +6,8 @@
 
         <meta charset="utf-8">
         <meta name="viewport" content="initial-scale=1, width=device-width">
+        <link rel="shortcut icon" href="static/favicon.ico" type="image/x-icon">
+
 
         <!-- http://getbootstrap.com/docs/4.5/ -->
         <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
@@ -22,6 +24,8 @@
         <!-- Localbase script -->
         <script src="https://unpkg.com/localbase/dist/localbase.dev.js"></script>
 
+        
+
         <title>KDrama Calendar {% block title %}{% endblock %}</title>
 
     </head>
@@ -37,16 +41,10 @@
                     <ul class="navbar-nav mr-auto mt-2">
                         <li class="nav-item"><a class="nav-link" href="/shows">Shows</a></li>
                         <li class="nav-item"><a class="nav-link" href="/calendar">Calendar</a></li>
-                    </ul>
-                {% if session.user_id %}
-                    <ul class="navbar-nav ml-auto mt-2">
-                        <li class="nav-item"><a class="nav-link" href="/logout">Log Out</a></li>
-                    </ul>
-                {% else %}
-                    <ul class="navbar-nav ml-auto mt-2">
-                        <li class="nav-item"><a class="nav-link" href="/register">Log In to Google Calendar</a></li>
-                    </ul>
-                {% endif %}
+                    </ul>        
+                    <!--Add buttons to initiate auth sequence and sign out-->
+                    <button id="login_button" style="display: none" class="navbar-nav ml-auto mt-2">Authorize</button>
+                    <button id="signout_button" style="display: none" class="navbar-nav ml-auto mt-2">Sign Out</button>
             </div>
         </nav>
 
@@ -60,6 +58,12 @@
 
         <main class="container p-md-0">
             {% block main %}{% endblock %}
+            <!-- Google API script -->
+            <script src="static/oauth.js"></script>
+            <script async defer src="https://apis.google.com/js/api.js"
+            onload="this.onload=function(){};handleClientLoad()"
+            onreadystatechange="if (this.readyState === 'complete') this.onload()">
+            </script>
         </main>
 
         <footer class="small text-center text-muted">
