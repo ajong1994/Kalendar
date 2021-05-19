@@ -90,7 +90,7 @@ main img
     margin-left: 5px;
 }
 
-p, span, a, label, th, td {
+p, span, a, label, th, td, button {
     font-family: "Rubik", sans-serif;
 }
 
@@ -276,6 +276,12 @@ nav .navbar-brand h2 {
 }
 
 @media (max-width: 768px) {
+    #show-table thead tr th:first-child, #show-table tbody tr td:first-child {
+        display:none;
+    }
+
+
+
     #buttonContainers button {
         font-size: 1.2rem;
         line-height: 2;

@@ -66,9 +66,13 @@ document.addEventListener('DOMContentLoaded', async function() {
     for (let i = removebutton.length - 1; i >= 0; i--) {
         removebutton[i].addEventListener("click", function() {
             let table_row_id = "table-row-" + [i + 1]
-            let showId = Number(removebutton[i].value)
+            let showTitle = removebutton[i].value
+            if (GoogleAuth.isSignedIn.get()) {
+                $("#deleteModal").modal('show')
+                document.getElementById("delete-gcal-btn").setAttribute("value", showTitle);
+            }
             // Delete show from DB before deleting the element so that calling the removebutton doesn't return undefined
-            db.collection("shows").doc({ id: showId }).delete()
+            db.collection("shows").doc({ title: showTitle }).delete()
             // Can't delete the row because it would include the button and shorten the array, thereby changing the index so hide rows instead
             temp_row = document.getElementById(table_row_id);
             while (temp_row.children.length > 1) {
@@ -76,8 +80,8 @@ document.addEventListener('DOMContentLoaded', async function() {
             }
             temp_row.hidden = true; 
             // Remove show events from calendar
-            while (calendar.getEventById(showId)) {
-                calendar.getEventById(showId).remove()
+            while (calendar.getEventById(showTitle)) {
+                calendar.getEventById(showTitle).remove()
             }
             counter = counter + 1;
 
@@ -92,8 +96,10 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     document.getElementById("sync-btn").addEventListener("click", sync_calendar);
     document.getElementById("clear-all-btn").addEventListener("click", clear_localcalendar);
-    document.getElementById("clearGoogle-btn").addEventListener("click", delete_fromGCal);
-    
+    document.getElementById("clearGoogle-btn").addEventListener("click", clear_GCal);
+    document.getElementById("delete-gcal-btn").addEventListener("click", function() {
+        deletefrom_GCal(this.value)
+    });
 });
 
 
@@ -113,7 +119,7 @@ function render_row([key, value]) {
     Object.assign(remove_button_td, {
         type: "button",
         className: "calendar-remove",
-        value: value.id
+        value: value.title
     })
     var svg = document.createElementNS("http://www.w3.org/2000/svg","svg");
     var svgWidth = 16;
