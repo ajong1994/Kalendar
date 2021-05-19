@@ -28,22 +28,27 @@ document.addEventListener('DOMContentLoaded', async function() {
         table.removeChild(table.firstChild);
     }
     if (shows.length !== 0) {
+        let thead = document.createElement("thead");
+        thead.setAttribute("class", "kalendar-bg-yellow");
         let table_row = document.createElement("tr");
         table_row.id = "table-row-0";
         table_header = [];
         for (let i = 0; i < 6; i++) {
             table_header[i] = document.createElement("th");
         }
-        table_header[0].textContent = "Show #";
+        table_header[0].textContent = "#";
         table_header[1].textContent = "Title";
         table_header[2].textContent = "Day Schedule";
         table_header[3].textContent = "Airing Period";
-        table_header[4].textContent = "Local Show Time";
+        table_header[4].textContent = "Show Time";
         table_header[5].textContent = "Delete";
-        document.getElementById("show-table").append(table_row);
+        document.getElementById("show-table").append(thead);
+        document.querySelector("thead").append(table_row);
         for (let j = 0; j < 6; j++) {
             document.getElementById("table-row-0").append(table_header[j]);
         }
+        let tbody = document.createElement("tbody");
+        document.getElementById("show-table").append(tbody);
         document.getElementById("clear-all-btn").style.display = "block";
         document.getElementById("sync-btn").style.display = "block";
     } else {
@@ -101,7 +106,7 @@ function render_row([key, value]) {
     } 
     table_cell[0].textContent = Number(key) + 1;
     table_cell[1].textContent = value.title;
-    table_cell[2].textContent = value.airing_days;
+    table_cell[2].textContent = value.airing_days.join(", ");
     table_cell[3].textContent = value.airing_dates;
     table_cell[4].textContent = new Date(value.localshowtime).toLocaleTimeString("en-US", { hour: '2-digit', minute: '2-digit' });
     var remove_button_td = document.createElement("button");
@@ -110,11 +115,20 @@ function render_row([key, value]) {
         className: "calendar-remove",
         value: value.id
     })
-    var remove_icon = document.createElement("i");
-    remove_icon.setAttribute("class","bi bi-x-square btn-outline-danger");
-    remove_button_td.appendChild(remove_icon);
+    var svg = document.createElementNS("http://www.w3.org/2000/svg","svg");
+    var svgWidth = 16;
+    var svgHeight = 16;
+    var path = document.createElementNS("http://www.w3.org/2000/svg","path");
+    svg.setAttributeNS(null, "width", svgWidth);
+    svg.setAttributeNS(null, "height", svgHeight);
+    svg.setAttributeNS(null, "viewBox", "0 0 " + svgWidth + " " + svgHeight);
+    svg.setAttributeNS(null, "fill", "currentColor");
+    svg.setAttributeNS(null, "class", "bi bi-x-lg calendar-remove-icon");
+    path.setAttributeNS(null, "d", "M1.293 1.293a1 1 0 0 1 1.414 0L8 6.586l5.293-5.293a1 1 0 1 1 1.414 1.414L9.414 8l5.293 5.293a1 1 0 0 1-1.414 1.414L8 9.414l-5.293 5.293a1 1 0 0 1-1.414-1.414L6.586 8 1.293 2.707a1 1 0 0 1 0-1.414z");
+    svg.appendChild(path);
+    remove_button_td.appendChild(svg);
     table_cell[5].appendChild(remove_button_td);
-    document.getElementById("show-table").append(table_row);
+    document.querySelector("tbody").append(table_row)
     for (let j = 0; j < 6; j++) {
         document.getElementById("table-row-" + (Number(key) + 1)).append(table_cell[j]);
     }

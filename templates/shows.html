@@ -5,70 +5,85 @@
 {% endblock %}
 
 {% block main %}
-    <div class="section shows-container">
-        <h2>Airing and Upcoming Shows</h2>
+<div class="kalendar-bg-neutral">
+    <div class="container px-md-0 shows-container pt-5">
+        <h2>Show List</h2>
         <div class="quarter-selection my-5">
             <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                <label class="btn btn-primary" active>
+                <label class="btn kalendar-bg-yellow" active>
                     <input type="radio" name="list-options" id="current-show-list" value="current" checked> Current Season
                 </label>
-                <label class="btn btn-primary">
+                <label class="btn btn-light">
                     <input type="radio" name="list-options" id="upcoming-show-list" value="upcoming"> Upcoming Season
                 </label>        
             </div>
         </div>
-        <div class="row row-cols-1 row-cols-md-3">
+        <div class="row row-cols-1 row-cols-md-2">
         {% for show in list %}
             <div class="col mb-4">
-                <div class="card h-100">
-                    <div class="row no-gutters">
-                        <div class="col-4">
-                            <img src="{{ show.thumbnail }}" class="card-img" alt="picture of {{ show.title }}">
-                        </div>
-                        <div class="col-8">
-                            <div class="card-body card-detail">
-                                <h5>{{ show.title }}</h5>
-                                <p class="card-text">Episodes: {{ show.episodes }}</p>
-                                <p class="card-text">Release Date: {{ show.released_at }}</p>
+                <a href="{{ show.url }}" class="card-link"data-toggle="modal" data-target="#dramaInfo">
+                    <div class="card h-100">
+                        <div class="row no-gutters">
+                            <div class="col-4">
+                                <img src="{{ show.thumbnail }}" class="card-img" alt="picture of {{ show.title }}">
                             </div>
-                            <div class="card-buttons">
-                                <button type="button" class="btn btn-primary see-btn" data-toggle="modal" data-target="#dramaInfo" value="{{ show.url }}">See More</button>
+                            <div class="col-8">
+                                <div class="card-body card-detail kalendar-navy">
+                                    <h5>{{ show.title }}</h5>
+                                    <p class="card-text pb-3 desktop-only"><span class="kalendar-violet info-subheader">Synopsis: </span>{{ show.synopsis }}</p>
+                                    <p class="card-text"><span class="kalendar-violet info-subheader">Episodes: </span>{{ show.episodes }}</p>
+                                    <p class="card-text"><span class="kalendar-violet info-subheader">Genres: </span>{{ show.genres }}</p>
+                                    <p class="card-text"><span class="kalendar-violet info-subheader">Release Date: </span>{{ show.released_at }}</p>
+                                </div>
+                                <div class="card-buttons">
+                                    <!-- <button type="button" class="btn kalendar-bg-violet see-btn" data-toggle="modal" data-target="#dramaInfo" value="{{ show.url }}">See More</button> !-->
+                                    <i class='bi bi-arrow-right'></i>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </a>
             </div>
         {% endfor %} 
         </div>
         <!-- Modal -->
         <div class="modal fade" id="dramaInfo" tabindex="-1" aria-labelledby="dramaInfoModal" aria-hidden="true">
-            <div class="modal-dialog modal-xl modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                <h5 class="modal-title" id="dramaInfoModalLabel">
-                    <div id="loading-title"></div>
-                </h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="dramaInfoModalLabel">
+                            <div id="loading-title"></div>
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        </div>
+                    <div class="row no-gutters" id="dramaInfoModalCont">
+                        <div class="col-md-4" id="dramaModalImageCont">
+                            <div class="dramaInfotempImage"></div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="modal-body align-middle" id="dramaInfoModalBody">
+                                <div class="dramaInfoLine mb-2" id="dramaInfoLine1"><div class="loading-line mb-4"></div></div>
+                                <div class="dramaInfoLine" id="dramaInfoLine2"><div class="loading-line mb-4"></div></div>
+                                <div class="dramaInfoLine" id="dramaInfoLine3"><div class="loading-line mb-4"></div></div>
+                                <div class="dramaInfoLine" id="dramaInfoLine4"><div class="loading-line mb-4"></div></div>
+                                <div id="dramaInfoLine5"></div>
+                                <div id="dramaInfoLine6"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn kalendar-bg-violet" id="AddShow">Add</button>
+                        <button type="button" class="btn btn-danger" id="RemoveShow">Remove</button>
+                    </div>
                 </div>
-                <div class="modal-body" id="dramaInfoModalBody">
-                    <div class="dramaInfoLine" id="dramaInfoLine1"><div class="loading-line mb-4"></div></div>
-                    <div class="dramaInfoLine" id="dramaInfoLine2"><div class="loading-line mb-4"></div></div>
-                    <div class="dramaInfoLine" id="dramaInfoLine3"><div class="loading-line mb-4"></div></div>
-                    <div class="dramaInfoLine" id="dramaInfoLine4"><div class="loading-line mb-4"></div></div>
-                    <div id="dramaInfoLine5"></div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="AddShow">Add</button>
-                    <button type="button" class="btn btn-danger" id="RemoveShow">Remove</button>
-                </div>
-            </div>
             </div>
         </div>
     </div>
     <script src="static/shows.js"></script>
+</div>
 
 {% endblock %}
 

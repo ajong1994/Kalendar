@@ -11,31 +11,36 @@ $(function refresh_list() {
             contentType: 'application/json;charset=UTF-8',
             success: function(data) {
                 let arr = data;
-                $(".row.row-cols-1.row-cols-md-3").empty();
+                $(".row.row-cols-1.row-cols-md-2").empty();
                 $.each(arr, function create_card(index, dict) {
                     // Create loading animation
                     // Create card container
                     let product_card = $("<div class='col mb-4'></div>")
                     // append divs containing show info
-                    .append($("<div class='card h-100'></div>")
-                        .append($("<div class='row no-gutters'></div>")
-                            .append($("<div class='col-4'></div>")
-                                .append($("<img src='" + dict.thumbnail + "' class='card-img' alt='picture of " + dict.title + "'>"))
-                            )
-                            .append($("<div class='col-8'></div")
-                                .append($("<div class='card-body card-detail'></div")
-                                    .append($("<h5>" + dict.title + "</h5>"))
-                                    .append($("<p class='card-text'>Episodes: " + dict.episodes + "</p>"))
-                                    .append($("<p class='card-text'>Release Date: " + dict.released_at +"</p>"))
+                    .append($("<a href='" + dict.url + "' class='card-link' data-toggle='modal' data-target='#dramaInfo'></a>")
+                        .append($("<div class='card h-100'></div>")
+                            .append($("<div class='row no-gutters'></div>")
+                                .append($("<div class='col-4'></div>")
+                                    .append($("<img src='" + dict.thumbnail + "' class='card-img' alt='picture of " + dict.title + "'>"))
                                 )
-                                .append($("<div class='card-buttons'></div>")
-                                    .append($("<button type='button' class='btn btn-primary see-btn' data-toggle='modal' data-target='#dramaInfo' value='" + dict.url + "'>See More</button>"))
+                                .append($("<div class='col-8'></div>")
+                                    .append($("<div class='card-body card-detail kalendar-navy'></div>")
+                                        .append($("<h5>" + dict.title + "</h5>"))
+                                        .append($("<p class='card-text pb-3 desktop-only'><span class='kalendar-violet'>Synopsis: </span>" + dict.synopsis + "</p>"))
+                                        .append($("<p class='card-text'><span class='kalendar-violet'>Episodes: </span>" + dict.episodes + "</p>"))
+                                        .append($("<p class='card-text'><span class='kalendar-violet'>Genres: </span>" + dict.genres +"</p>"))
+                                        .append($("<p class='card-text'><span class='kalendar-violet'>Release Date: </span>" + dict.released_at +"</p>"))
+                                    )
+                                    .append($("<div class='card-buttons'></div>")
+                                        // .append($("<button type='button' class='btn btn-primary see-btn' data-toggle='modal' data-target='#dramaInfo' value='" + dict.url + "'>See More</button>"))
+                                        .append($("<i class='bi bi-arrow-right'></i>"))
+                                    )
                                 )
                             )
                         )
                     );
                     // append complete card
-                    $(".row.row-cols-1.row-cols-md-3").append(product_card)
+                    $(".row.row-cols-1.row-cols-md-2").append(product_card)
                 });
             },
             error:  function(data) {
@@ -48,14 +53,15 @@ $(function refresh_list() {
 // initialize show_data global variable which can be used to store and access active show info
 var show_data;
 $(function fill_modal() {
-    $("body").on("click", ".see-btn", function() {
+    $("body").on("click", ".card-link", function() {
         modify_modal();
         let self = $(this);
+        console.log(self)
         $.ajax({
             type : "POST",
             url : "/shows",
             dataType: "json",
-            data: JSON.stringify({handle: self.val()}),
+            data: JSON.stringify({handle: self.attr("href")}),
             contentType: 'application/json;charset=UTF-8',
             success: function(data) {
                 show_data = data;
@@ -64,6 +70,7 @@ $(function fill_modal() {
             },
             error:  function(data) {
                 $("#dramaInfoModalLabel").html("<span style='color:red'>Sorry!</span>");
+                $(".dramaModalImageCont").prop("hidden", true);
                 $("#dramaInfoLine1").html("");
                 $("#dramaInfoLine2").html("Source data for this drama is inaccessible.");
                 $("#dramaInfoLine3").html("");
@@ -77,20 +84,25 @@ $(function fill_modal() {
 // Clears modal HTML and adds freshly pulled info
 async function modify_modal(data="None") {
     if (data == "None") {
+        $("#dramaInfoModalCont").prop("hidden", false);
+        $("#dramaModalImageCont").html("<div class='dramaInfotempImage'></div>");
         $("#dramaInfoModalLabel").html("<div id='loading-title'></div>");
         $(".dramaInfoLine").html("<div class='loading-line mb-4'></div>");
         $("#dramaInfoLine5").html("");
+        $("#dramaInfoLine6").html("");
         $("#AddShow").prop("hidden",true);
         $("#RemoveShow").prop("hidden", true);
         $("#AddShow").html("Add");
     }
     else {
         $("#dramaInfoModalLabel").html(data.title);
-        $("#dramaInfoLine1").html("Synopsis: " + data.synopsis);
-        $("#dramaInfoLine2").html("Cast: " + data.cast.join(", "));
-        $("#dramaInfoLine3").html("Airing dates: " + data.air_date);
-        $("#dramaInfoLine4").html("Schedule: " + data.aired_on);
-        $("#dramaInfoLine5").html("Genres: "+ data.genres);
+        $(".dramaInfotempImage").replaceWith("<img src='" + data.poster + "' class='dramaModalImage' alt='picture of " + data.title + "'>")
+        $("#dramaInfoLine1").html("<span class='kalendar-violet info-subheader'>Synopsis: </span>" + data.synopsis);
+        $("#dramaInfoLine2").html("<span class='kalendar-violet info-subheader'>Cast: </span>" + data.cast.join(", "));
+        $("#dramaInfoLine3").html("<span class='kalendar-violet info-subheader'>Episodes: </span>" + data.episodes);
+        $("#dramaInfoLine4").html("<span class='kalendar-violet info-subheader'>Airing dates: </span>" + data.air_date);
+        $("#dramaInfoLine5").html("<span class='kalendar-violet info-subheader'>Schedule: </span>" + data.aired_on);
+        $("#dramaInfoLine6").html("<span class='kalendar-violet info-subheader'>Genres: </span>"+ data.genres);
         // This async function waits for the promise from the checkdb function to
         // make sure it's comparing the final result and not a premature undefined
         if (await checkdb() !== undefined) {

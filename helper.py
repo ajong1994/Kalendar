@@ -41,7 +41,11 @@ def generate(year, quarter):
                 result_info["episodes"] = result.setdefault("episodes", "N/A")
                 result_info["released_at"] = result.setdefault("released_at", "N/A")
                 result_info["url"] = result.setdefault("url", "N/A")
-                result_info["thumbnail"] = result.setdefault("thumbnail", "N/A")
+                result_info["thumbnail"] = result.setdefault("cover", "N/A")
+                result_info["synopsis"] = result.setdefault("synopsis", "N/A")
+                if result_info["synopsis"] == "":
+                    result_info["synopsis"] = "N/A"
+                result_info["genres"] = result.setdefault ("genres", "").replace(",", ", ")
                 korean_shows.append(result_info)
             except (KeyError, TypeError, ValueError):
                     return 103      
@@ -70,6 +74,8 @@ def fetch(drama_url):
         info_parsed["title"] = info_unparsed["data"].setdefault("title", "N/A")
         info_parsed["poster"] = info_unparsed["data"].setdefault("poster", "N/A")
         info_parsed["synopsis"] = info_unparsed["data"].setdefault("synopsis", "N/A")
+        if info_parsed["synopsis"] == " ":
+             info_parsed["synopsis"] = "N/A"
         info_parsed["cast"] = info_unparsed["data"].setdefault("casts", "N/A")
         info_parsed["episodes"] = info_unparsed["data"]["details"].setdefault("episodes", "N/A")
         info_parsed["air_date"] = info_unparsed["data"]["details"].setdefault("aired", "N/A")
@@ -83,7 +89,6 @@ def fetch(drama_url):
         info_parsed["duration"] = info_unparsed["data"].setdefault("duration", "60")
         info_parsed["genres"] = info_unparsed["data"]["others"].setdefault("genres", "N/A")
         info_parsed["url"] = info_unparsed["data"].setdefault("url", "N/A")
-        print(info_parsed)
         return info_parsed
     except (KeyError, TypeError, ValueError):
         return 104
