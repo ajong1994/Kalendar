@@ -24,27 +24,29 @@
         <!-- Localbase script -->
         <script src="https://unpkg.com/localbase/dist/localbase.dev.js"></script>
 
-        
+        <!-- Google Fonts -->
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Rubik:wght@400;600;800&display=swap" rel="stylesheet">
 
-        <title>KDrama Calendar {% block title %}{% endblock %}</title>
+        <title>Kalendar {% block title %}{% endblock %}</title>
 
     </head>
 
     <body>
 
         <nav class="navbar navbar-expand-md navbar-light bg-light border">
-            <a class="navbar-brand" href="/"><span class="blue">KDrama Calendar</span></a>
+            <a class="navbar-brand" href="/"><img src="static/kalendar-logo2.png" id="nav-logo" class="align-middle"><h2 class="align-middle kalendar-violet">KALENDAR</h2></a>
             <button aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-target="#navbar" data-toggle="collapse" type="button">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbar">
-                    <ul class="navbar-nav mr-auto mt-2">
-                        <li class="nav-item"><a class="nav-link" href="/shows">Shows</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/calendar">Calendar</a></li>
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item"><a class="nav-link mr-md-4" href="/shows">Shows</a></li>
+                        <li class="nav-item"><a class="nav-link mr-md-4" href="/calendar">Calendar</a></li>
                     </ul>        
                     <!--Add buttons to initiate auth sequence and sign out-->
-                    <button id="login_button" style="display: none" class="navbar-nav ml-auto mt-2">Authorize</button>
-                    <button id="signout_button" style="display: none" class="navbar-nav ml-auto mt-2">Sign Out</button>
+                    <button id="login_button" style="display: none" class="btn kalendar-bg-yellow">Login</button>
+                    <button id="logout_button" style="display: none" class="btn kalendar-bg-yellow">Logout</button>
             </div>
         </nav>
 
@@ -56,7 +58,7 @@
             </header>
         {% endif %}
 
-        <main class="container p-md-0">
+        <main>
             {% block main %}{% endblock %}
             <!-- Google API script -->
             <script src="static/oauth.js"></script>

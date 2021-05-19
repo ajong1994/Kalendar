@@ -15,25 +15,16 @@ load_dotenv()
 # Configure application
 app = Flask(__name__)
 
-# dont know what this does
 # Ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 
-# dont know what this does
 # Ensure responses aren't cached
 @app.after_request
 def after_request(response):
-    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    response.headers["Cache-Control"] = "no-cache, must-revalidate"
     response.headers["Expires"] = 0
     response.headers["Pragma"] = "no-cache"
     return response
-
-# dont know what this does
-# Configure session to use filesystem (instead of signed cookies)
-app.config["SESSION_FILE_DIR"] = mkdtemp()
-app.config["SESSION_PERMANENT"] = False
-app.config["SESSION_TYPE"] = "filesystem"
-
 
 @app.route("/calendar", methods=["GET", "POST"])
 def calendar():
@@ -53,7 +44,6 @@ def refresh():
     selected_period = request.json["list"]
     if selected_period == "current":
         show_list = generate(year_now(), quarter_now())
-        print(quarter_now(),year_now())
     else: 
         if quarter_now() == 3:
             show_list1 = generate(year_now(), quarter_next1())

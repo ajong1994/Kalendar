@@ -28,7 +28,7 @@ var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/
 var SCOPES = "https://www.googleapis.com/auth/calendar";
 
 var loginButton = document.getElementById('login_button');
-var signoutButton = document.getElementById('signout_button');
+var logoutButton = document.getElementById('logout_button');
 
 /**
  *  On load, called to load the auth2 library and API client library.
@@ -58,7 +58,7 @@ function initClient() {
     // Handle the initial sign-in state.
     updateSigninStatus(GoogleAuth.isSignedIn.get());
     loginButton.onclick = handleAuthClick;
-    signoutButton.onclick = handleSignoutClick;
+    logoutButton.onclick = handleSignoutClick;
   }, function(error) {
     alert(JSON.stringify(error, null, 2));
   });
@@ -71,14 +71,19 @@ function initClient() {
 function updateSigninStatus(isSignedIn) {
   if (isSignedIn) {
     loginButton.style.display = "none";
-    signoutButton.style.display = "block";
+    logoutButton.style.display = "block";
     document.getElementById("clearGoogle-btn").style.display = "block";
     $("#accessModal").modal('hide')
     // Add bootstrap toast to signify login
   } else {
+    try {
     loginButton.style.display = "block";
-    signoutButton.style.display = "none";
+    logoutButton.style.display = "none";
     document.getElementById("clearGoogle-btn").style.display = "none";
+    } catch (TypeError) {
+      
+    }
+    
     // Add bootstrap toast to signify logout
   }
 }
@@ -142,8 +147,6 @@ async function sync_calendar() {
             // Create a function to add an event object to gcal_events array for every show in localbase
             // Currently uses count to add event instances but should change it to end date so that netflix shows only show up once
             for (let i = 0; i < shows.length; i++) {
-              console.log(eventslist)
-              console.log(shows[i].title)
               if (eventslist.indexOf(shows[i].title) == -1) {
                 var gcal_events = {
                   "summary": shows[i].title,
@@ -160,8 +163,6 @@ async function sync_calendar() {
                   ],
                   "description": "Shown on" + shows[i].network
                 }
-                console.log(eventslist.indexOf(shows[i].title))
-                console.log(shows[i].title + " ran")
                 var add_request = gapi.client.calendar.events.insert({
                   "calendarId": calendar_id,
                   "resource": gcal_events
@@ -228,7 +229,6 @@ function delete_fromGCal() {
       if (authResult && !authResult.error) {
 
         function clear_cal(calendar_id) {
-          console.log(calendar_id)
           var clear_request = gapi.client.calendar.calendars.delete({
             "calendarId": calendar_id,
           });
@@ -237,7 +237,7 @@ function delete_fromGCal() {
           });
         }
         var getcalendarList = new Promise(function(myResolve, myReject) {
-          var calendar_id;
+          var calendar_id;ß
           var request = gapi.client.calendar.calendarList.list();
           request.execute(async function(response) {
             // Get list of calendars from user's calendars and look for "Kalendar KDrama"

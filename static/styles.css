@@ -5,21 +5,57 @@ nav .navbar-brand
 }
 
 /* Colors for brand */
-nav .navbar-brand .blue
+.kalendar-violet
 {
-    color: #537fbe;
+    color: #5f27cd;
 }
-nav .navbar-brand .red
+.kalendar-bg-violet
 {
-    color: #ea433b;
+   background-color: #5f27cd;
+   border-color: #5f27cd;
+   color: white;
 }
-nav .navbar-brand .yellow
+.kalendar-yellow
 {
-    color: #f5b82e;
+    color: #ff9f43;
 }
-nav .navbar-brand .green
-{
-    color: #2e944b;
+.kalendar-bg-yellow {
+    background-color: #ff9f43;
+    border-color: #ff9f43;
+    color: white;
+}
+.kalendar-teal {
+    color: #1dd1a1;
+}
+.kalendar-bg-teal {
+    background-color: #1dd1a1;
+    border-color: #1dd1a1;
+    color: #222f3e
+}
+
+.kalendar-red {
+    color: #e62965;
+}
+
+.kalendar-bg-red {
+    background-color: #e62965;
+    border-color: #e62965;
+    color: white;
+}
+
+.kalendar-bg-white {
+    background-color: white;
+    border-color: white;
+    color: #222f3e;
+}
+
+.kalendar-navy {
+    color: #222f3e;
+}
+.kalendar-bg-neutral {
+    background-color: #f5f6fa;
+    border-color: #f5f6fa;
+    color: #222f3e;
 }
 
 main .form-control
@@ -46,6 +82,45 @@ main img
     max-width: 100%;
 }
 
+/*----- start of theme CSS -----*/
+#nav-logo {
+    width: 30px;
+    height: auto;
+    margin-right: 5px;
+    margin-left: 5px;
+}
+
+p, span, a, label, th, td {
+    font-family: "Rubik", sans-serif;
+}
+
+h5, h4, h3, h2, h1 {
+    font-family: 'Rubik', sans-serif;
+}
+
+h2, h1 {
+    font-weight: 800;
+}
+
+nav .navbar-brand h2 {
+    margin: 0;
+    display: inline-block;
+}
+
+@media (min-width: 768px) {
+    .navbar-nav .nav-link, #navbar button {
+        font-size: 1.2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .desktop-only {
+        display: none;
+    }
+}
+/*----- end of theme CSS -----*/
+
+
 /*----- start of show page CSS -----*/
 .index th {
     padding: 0 20px;
@@ -65,13 +140,39 @@ main img
 
 .card-buttons {
     position: absolute;
-    bottom: 10px;
-    right: 10px;
+    bottom: .75rem;
+    right: 1.25rem;
+}
+
+.card-buttons .bi-arrow-right {
+    font-size: 17px;
+    color: #5f27cd;
+}
+
+.card {
+    border: none;
+}
+
+.card-body h5 {
+    font-weight: 600;
+    padding-bottom: 1rem;
+}
+
+#dramaInfoModalLabel {
+    font-weight: 600;
 }
 
 .modal {
     left: 50%;
     transform: translate(-50%, 0);
+}
+
+.close span {
+    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+}
+
+.info-subheader {
+    margin-right: 5px;
 }
 
 #loading-title {
@@ -88,6 +189,23 @@ main img
     background:rgb(228, 228, 228);
 }
 
+.dramaInfotempImage, .dramaModalImage {
+    background: rgb(216, 216, 216);
+    height: 350px;
+    width: calc(100% - 2rem);
+    margin: 1rem;
+    border-radius: .25rem;
+}
+
+@media (max-width: 768px) {
+    .dramaInfotempImage, .dramaModalImage {
+        width: auto;
+    }
+}
+
+#dramaInfoModalBody {
+    text-align: left;
+}
 
 @media only screen and (min-width: 768px) {
     .quarter-selection {
@@ -108,4 +226,58 @@ main img
     background-color: transparent;
     border:none;
     padding: 1px;
+}
+
+#show-table {
+    white-space: nowrap;
+    text-align: left;
+}
+
+#show-table thead tr th:nth-child(2), #show-table tbody tr td:nth-child(2) {
+    position: sticky;
+    z-index: 2;
+    left: 0;
+    background-color: #ff9f43;
+}
+
+#show-table thead tr th:last-child, #show-table tbody tr td:last-child,
+#show-table thead tr th:first-child, #show-table tbody tr td:first-child {
+    text-align: center;
+}
+
+#show-table tbody tr td:nth-child(2), #show-table tbody {
+    background-color: #fff;
+}
+
+#show-table td {
+    padding: 1rem 1.5rem;
+}
+
+#show-table th {
+    font-weight: 600;
+    padding: 1rem 1.5rem;
+}
+
+.calendar-remove {
+    padding: 0;
+}
+
+.calendar-remove-icon {
+    color: #e62965;
+    width: 1rem;
+}
+
+#clear-all-btn {
+    border-color: gray;
+}
+
+#calendar {
+    padding-top: 8rem;
+}
+
+@media (max-width: 768px) {
+    #buttonContainers button {
+        font-size: 1.2rem;
+        line-height: 2;
+    }
 }
