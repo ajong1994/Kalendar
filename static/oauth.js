@@ -213,11 +213,99 @@ async function sync_calendar() {
     $("#accessModal").modal('show')
     document.getElementById("access-btn").addEventListener("click", GoogleAuth.signIn);
   }
-
-
 }
 
-function delete_fromGCal() {
+
+async function deletefrom_GCal(show_title) {
+  var showTitle = show_title;
+  if (GoogleAuth.isSignedIn.get()) {
+    gapi.auth.authorize({
+      client_id: CLIENT_ID1 + "-" + CLIENT_ID2 + ".apps.googleusercontent.com",
+      scope: SCOPES,
+      immediate: true
+      }, handleAuthResult);
+    
+    function handleAuthResult (authResult) {
+      if (authResult && !authResult.error) {
+        // Get the list of events (shows) in the Kalendar Calendar in GCal. Get the ID and Title.
+        function delete_event(calendar_id) {
+          var checkcal = new Promise (function(events, empty) {
+            var showlist = {};
+            var list_request = gapi.client.calendar.events.list({
+              "calendarId": calendar_id,
+            });
+            list_request.execute(function(response){
+              for (let i = 0; i < response.items.length; i++) {
+                showlist[response.items[i].summary] = response.items[i].id
+                events(showlist)
+              }
+              if (response.items.length == 0) {
+                events(showlist)
+              }
+            })
+          })
+         
+          checkcal.then(function(events){
+            console.log(events)
+            deletefromGoogle(events);
+          });
+
+          function deletefromGoogle(showList) {
+            // Create a function to add an event object to gcal_events array for every show in localbase
+            // Currently uses count to add event instances but should change it to end date so that netflix shows only show up once
+              if (showTitle in showList) {
+                console.log(showTitle)
+                console.log(showList)
+                console.log(showList[showTitle])
+                var add_request = gapi.client.calendar.events.delete({
+                  "calendarId": calendar_id,
+                  "eventId": showList[showTitle]
+                });
+
+                add_request.execute(function(response){
+                  $("#deleteModal").modal('hide')
+                  $("#SuccessDeleteToast").toast("show");
+                }); 
+              } 
+            
+          };
+        };   
+        var getcalendarList = new Promise(function(myResolve, myReject) {
+          var calendar_id;
+          var request = gapi.client.calendar.calendarList.list();
+          request.execute(async function(response) {
+            // Get list of calendars from user's calendars and look for "Kalendar KDrama"
+            var calendars = response.items;
+            for (let i = 0; i < calendars.length; i++) {
+              // Loop through calendars and look for "Kalendar Kdrama" which we'll use to inject KDrama events
+              if (calendars[i].summary === "Kalendar KDramas") {
+                // return with calendar ID
+                var calendar_id = calendars[i].id
+                myResolve(calendar_id);
+                break
+              } 
+            }
+            if (calendar_id === undefined) {
+              // If no "Kalendar KDramas" is found, return and alert
+              myReject("No Kalendar found.");
+            }
+          });
+        });
+        getcalendarList.then(function(result) {
+          delete_event(result)
+        });
+      } else {
+        console.log("Unauthorized.")
+      }
+    }
+  } else {
+    $("#accessModal").modal('show')
+    document.getElementById("access-btn").addEventListener("click", GoogleAuth.signIn);
+  }
+}
+
+
+function clear_GCal() {
   if (GoogleAuth.isSignedIn.get()) {
     gapi.auth.authorize({
       client_id: CLIENT_ID1 + "-" + CLIENT_ID2 + ".apps.googleusercontent.com",
@@ -233,7 +321,7 @@ function delete_fromGCal() {
             "calendarId": calendar_id,
           });
           clear_request.execute(function(response){
-            $("#SuccessDeleteToast").toast("show");
+            $("#SuccessClearToast").toast("show");
           });
         }
         var getcalendarList = new Promise(function(myResolve, myReject) {
