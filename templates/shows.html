@@ -5,15 +5,15 @@
 {% endblock %}
 
 {% block main %}
-<div class="kalendar-bg-neutral">
+<div class="kalendar-bg-dark top-section">
     <div class="container px-md-0 shows-container pt-5">
         <h2>Show List</h2>
-        <div class="quarter-selection my-5">
+        <div class="season-selection my-5">
             <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                <label class="btn kalendar-bg-yellow" active>
+                <label class="btn kalendar-violet-hollow active" >
                     <input type="radio" name="list-options" id="current-show-list" value="current" checked> Current Season
                 </label>
-                <label class="btn btn-light">
+                <label class="btn kalendar-violet-hollow">
                     <input type="radio" name="list-options" id="upcoming-show-list" value="upcoming"> Upcoming Season
                 </label>        
             </div>
@@ -22,18 +22,18 @@
         {% for show in list %}
             <div class="col mb-4">
                 <a href="{{ show.url }}" class="card-link"data-toggle="modal" data-target="#dramaInfo">
-                    <div class="card h-100">
+                    <div class="card h-100 kalendar-inner-dark">
                         <div class="row no-gutters">
                             <div class="col-4">
                                 <img src="{{ show.thumbnail }}" class="card-img" alt="picture of {{ show.title }}">
                             </div>
-                            <div class="col-8">
-                                <div class="card-body card-detail kalendar-navy">
+                            <div class="col-8 card-body-container">
+                                <div class="card-body card-detail">
                                     <h5>{{ show.title }}</h5>
-                                    <p class="card-text pb-3 desktop-only"><span class="kalendar-violet info-subheader">Synopsis: </span>{{ show.synopsis }}</p>
-                                    <p class="card-text"><span class="kalendar-violet info-subheader">Episodes: </span>{{ show.episodes }}</p>
-                                    <p class="card-text"><span class="kalendar-violet info-subheader">Genres: </span>{{ show.genres }}</p>
-                                    <p class="card-text"><span class="kalendar-violet info-subheader">Release Date: </span>{{ show.released_at }}</p>
+                                    <p class="card-text pb-3 desktop-only"><span class="kalendar-violet-od info-subheader">Synopsis: </span>{{ show.synopsis }}</p>
+                                    <p class="card-text"><span class="kalendar-violet-od info-subheader">Episodes: </span>{{ show.episodes }}</p>
+                                    <p class="card-text"><span class="kalendar-violet-od info-subheader">Genres: </span>{{ show.genres }}</p>
+                                    <p class="card-text"><span class="kalendar-violet-od info-subheader">Release Date: </span>{{ show.released_at }}</p>
                                 </div>
                                 <div class="card-buttons">
                                     <!-- <button type="button" class="btn kalendar-bg-violet see-btn" data-toggle="modal" data-target="#dramaInfo" value="{{ show.url }}">See More</button> !-->
@@ -49,7 +49,7 @@
         <!-- Modal -->
         <div class="modal fade" id="dramaInfo" tabindex="-1" aria-labelledby="dramaInfoModal" aria-hidden="true">
             <div class="modal-dialog modal-lg modal-dialog-centered">
-                <div class="modal-content">
+                <div class="modal-content kalendar-bg-dark">
                     <div class="modal-header">
                         <h5 class="modal-title" id="dramaInfoModalLabel">
                             <div id="loading-title"></div>
@@ -76,7 +76,7 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         <button type="button" class="btn kalendar-bg-violet" id="AddShow">Add</button>
-                        <button type="button" class="btn btn-danger" id="RemoveShow">Remove</button>
+                        <button type="button" class="btn kalendar-red" id="RemoveShow">Remove</button>
                     </div>
                 </div>
             </div>

@@ -3,16 +3,63 @@ var db = new Localbase("db");
 var calendar;
 
 document.addEventListener('DOMContentLoaded', async function() {
+    // Check if mobile to render different calendar views and settings
+    function mobileviewCheck() {
+        if (window.innerWidth >= 768 ) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    // Initialize bootstrap popovers for events
+    $(function () {
+        $('[data-toggle="popover"]').popover()
+      })
 
     // Initialize fullcalendar
     var calendarEl = document.getElementById("calendar");
     calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: "dayGridMonth",
-        themeSystem: "bootstrap",
+        // Solution derived from Simon Botero's answer on https://stackoverflow.com/questions/41908295/fullcalendar-change-view-for-mobile-devices
+        initialView: mobileviewCheck() ? "listMonth" : "dayGridMonth",
+        contentHeight: mobileviewCheck() ? 550 : "auto",
+        windowResize: function () {
+            if (mobileviewCheck()) {
+                calendar.changeView("listMonth");
+            } else {
+                calendar.changeView("dayGridMonth");
+            }
+        },
+        headerToolbar: {
+            left: "dayGridMonth,listMonth",
+            center: "title",
+            right: "prev,next",
+        },
+        buttonText: {
+            month: "Grid",
+            list: "List",
+            today: "Today"
+        },
+        eventDidMount: function(info) {
+            $(info.el).popover({
+                trigger: "click",
+                title: info.event.title,
+                content: "Air time: " + info.event.start.toLocaleTimeString("en-US", { hour: '2-digit', minute: '2-digit' })
+             });
+        },
         timeZone: "local",
         events: []
     });
     calendar.render();
+
+    // Close tooltip when user clicks outside of the body from user28490 and kn0mad1c on https://stackoverflow.com/questions/11703093/how-to-dismiss-a-twitter-bootstrap-popover-by-clicking-outside
+    $("html").on("mouseup", function (e) {
+        var l = $(e.target);
+        if (l[0].className.indexOf("popover") == -1) {
+            $(".popover").each(function () {
+                $(this).popover("hide");
+            });
+        }
+    });
 
     // Read show DB from localbase
     try {
@@ -43,7 +90,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         table_header[4].textContent = "Show Time";
         table_header[5].textContent = "Delete";
         document.getElementById("show-table").append(thead);
-        document.querySelector("thead").append(table_row);
+        document.querySelector("#show-table thead").append(table_row);
         for (let j = 0; j < 6; j++) {
             document.getElementById("table-row-0").append(table_header[j]);
         }
@@ -94,12 +141,26 @@ document.addEventListener('DOMContentLoaded', async function() {
         });
     };
 
+    // Click listeners for the show table buttons and modals
     document.getElementById("sync-btn").addEventListener("click", sync_calendar);
     document.getElementById("clear-all-btn").addEventListener("click", clear_localcalendar);
     document.getElementById("clearGoogle-btn").addEventListener("click", clear_GCal);
     document.getElementById("delete-gcal-btn").addEventListener("click", function() {
         deletefrom_GCal(this.value)
     });
+
+    // Click listener to adjust calendar height if the device is mobile and the view is grid and unset it otherwise
+    document.querySelector(".fc-dayGridMonth-button").addEventListener("click", function() {
+        if (mobileviewCheck()) {
+            calendar.setOption('contentHeight', "auto");
+        }
+    });
+    document.querySelector(".fc-listMonth-button").addEventListener("click", function() {
+        if (mobileviewCheck()) {
+            calendar.setOption('contentHeight', 500);
+        }
+    });
+    
 });
 
 
@@ -134,7 +195,7 @@ function render_row([key, value]) {
     svg.appendChild(path);
     remove_button_td.appendChild(svg);
     table_cell[5].appendChild(remove_button_td);
-    document.querySelector("tbody").append(table_row)
+    document.querySelector("#show-table tbody").append(table_row)
     for (let j = 0; j < 6; j++) {
         document.getElementById("table-row-" + (Number(key) + 1)).append(table_cell[j]);
     }
@@ -163,6 +224,7 @@ function addEvent([key, value]) {
         else {
             eventObj.rrule.count = 1;
         }
+        if (new Date)
         calendar.addEvent(eventObj);
     } catch (TypeError) {
         console.log(TypeError)
