@@ -5,25 +5,46 @@ nav .navbar-brand
 }
 
 /* Colors for brand */
-.kalendar-violet
-{
+.kalendar-violet {
     color: #5f27cd;
 }
-.kalendar-bg-violet
-{
+.kalendar-bg-violet, .kalendar-violet-hollow:hover {
    background-color: #5f27cd;
    border-color: #5f27cd;
    color: white;
 }
-.kalendar-yellow
-{
+
+.kalendar-violet-hollow {
+    border-color: #5f27cd;
+    color: white;
+}
+
+.kalendar-violet-od {
+    color: #9f35ff;
+}
+
+.kalendar-bg-violet:active, .kalendar-bg-violet:hover {
+    background-color: #9f35ff !important;
+    border-color: #9f35ff !important;
+    color: white !important;
+ }
+
+.kalendar-yellow {
     color: #ff9f43;
 }
+
 .kalendar-bg-yellow {
     background-color: #ff9f43;
     border-color: #ff9f43;
-    color: white;
+    color: #17191b;
 }
+
+.kalendar-bg-yellow:hover {
+    background-color: #ffb064;
+    border-color: #ffb064;
+    color: #17191b;
+}
+
 .kalendar-teal {
     color: #1dd1a1;
 }
@@ -34,10 +55,12 @@ nav .navbar-brand
 }
 
 .kalendar-red {
+    background-color: transparent;
+    border-color: #e62965;
     color: #e62965;
 }
 
-.kalendar-bg-red {
+.kalendar-red:hover {
     background-color: #e62965;
     border-color: #e62965;
     color: white;
@@ -49,6 +72,10 @@ nav .navbar-brand
     color: #222f3e;
 }
 
+.kalendar-bg-white:active, .kalendar-bg-white:hover {
+    background-color: #efefef;
+}
+
 .kalendar-navy {
     color: #222f3e;
 }
@@ -56,6 +83,28 @@ nav .navbar-brand
     background-color: #f5f6fa;
     border-color: #f5f6fa;
     color: #222f3e;
+}
+
+.kalendar-bg-dark {
+    background-color: #17191b;
+    color: white;
+}
+
+.kalendar-bg-darker {
+    background-color: #141417;
+}
+
+.kalendar-inner-dark {
+    background-color: #09090a45;
+    color: white;
+}
+
+header {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    z-index: 1051;
 }
 
 main .form-control
@@ -82,15 +131,17 @@ main img
     max-width: 100%;
 }
 
+.top-section {
+    padding-top: 15rem !important;
+}
 /*----- start of theme CSS -----*/
 #nav-logo {
     width: 30px;
     height: auto;
     margin-right: 5px;
-    margin-left: 5px;
 }
 
-p, span, a, label, th, td, button {
+p, span, a, label, th, td, button, .popover {
     font-family: "Rubik", sans-serif;
 }
 
@@ -98,11 +149,15 @@ h5, h4, h3, h2, h1 {
     font-family: 'Rubik', sans-serif;
 }
 
-h2, h1 {
+nav .navbar-brand h3, h2, h1 {
     font-weight: 800;
 }
 
-nav .navbar-brand h2 {
+h2 {
+    font-size: 2.5rem;
+}
+
+nav .navbar-brand h3 {
     margin: 0;
     display: inline-block;
 }
@@ -118,16 +173,121 @@ nav .navbar-brand h2 {
         display: none;
     }
 }
+
+.modal-header {
+    border-bottom: 1px solid #434546;
+}
+
+.modal-footer {
+    border-top: 1px solid #434546;
+}
 /*----- end of theme CSS -----*/
 
 
-/*----- start of show page CSS -----*/
-.index th {
-    padding: 0 20px;
+/*----- start of index page CSS -----*/
+.index-container {
+    background-color: #5f27cd;
 }
 
-.share_input {
-    margin: 0 20px;
+#banner-header-1 {
+    display: block;
+    width: 100%;
+    color: white;
+}
+
+#index-banner-header {
+    font-size: 3rem;
+    color: white;
+    letter-spacing: 1px;
+}
+
+.index-banner-text {
+    font-size: 1.4rem;
+    color: white;
+}
+
+#banner-header-2 {
+    position: relative;
+    padding-bottom: 8px;
+    z-index: 1;
+    color: #ff9f43;
+}
+
+#banner-header-2::after {
+    content: "";
+    position: absolute;
+    left: 7%;
+    bottom: 8px;
+    width: 105%;
+    height: 14px;
+    transform: skew(-12deg) translateX(-5%);
+    background: #17191b;
+    z-index: -1;
+    opacity: 0.8;
+}
+
+#banner-btn {
+    font-size: 1.4rem;
+    border-radius: 0.5rem;
+    padding: 0.5rem 2rem;
+    margin-top: 2rem;
+}
+
+.how-to-number {
+    font-weight: 800;
+    font-size: 10rem;
+    display: inline-block;
+    color: #5f27cd;
+}
+
+.how-to-subheader {
+    font-weight: 600;
+    font-size: 4rem;
+    display: inline-block;
+    z-index: 1;
+    position: relative;
+}
+
+#how-to3 {
+    transform: translate(-60%, -40%);
+    position: absolute;
+}
+
+.step-text {
+    padding-top: 10%;
+}
+
+#step-image-3, #step-image-1 {
+    max-width: 80%;
+}
+
+.how-to-text {
+    font-size: 1.4rem;
+    text-align: left;
+}
+
+@media (min-width: 768px) {
+    #index-banner-header {
+        font-size: 5rem;
+    }
+
+    #banner-header-2::after {
+        bottom: 16px;
+    }
+}
+/*----- end of index CSS -----*/
+
+
+/*----- start of show page CSS -----*/
+
+.season-selection .btn[active], .season-selection .btn.active {
+    background-color: #5f27cd !important;
+    border-color: #5f27cd !important;
+    color: white !important;
+}
+
+.season-selection .btn {
+    padding: 0.5rem 0.75rem; 
 }
 
 .card-detail {
@@ -146,11 +306,24 @@ nav .navbar-brand h2 {
 
 .card-buttons .bi-arrow-right {
     font-size: 17px;
-    color: #5f27cd;
+    color: #9f35ff;
+}
+
+.card-buttons .bi-arrow-right::before {
+    font-weight: 600!important;
 }
 
 .card {
     border: none;
+}
+
+.card-body-container {
+    border-radius: .25rem;
+    border-right: 4px solid transparent;
+}
+
+.card-body-container:hover {
+    border-right: 4px solid #9f35ff;
 }
 
 .card-body h5 {
@@ -192,14 +365,14 @@ nav .navbar-brand h2 {
 .dramaInfotempImage, .dramaModalImage {
     background: rgb(216, 216, 216);
     height: 350px;
-    width: calc(100% - 2rem);
+    width: auto;
     margin: 1rem;
     border-radius: .25rem;
 }
 
-@media (max-width: 768px) {
+@media (min-width: 768px) {
     .dramaInfotempImage, .dramaModalImage {
-        width: auto;
+        width: calc(100% - 2rem);
     }
 }
 
@@ -208,7 +381,7 @@ nav .navbar-brand h2 {
 }
 
 @media only screen and (min-width: 768px) {
-    .quarter-selection {
+    .season-selection {
         display: flex;
         justify-content: flex-end;
     } 
@@ -221,6 +394,7 @@ nav .navbar-brand h2 {
 /*----- end of show page CSS -----*/
 
 /*----- start of calendar page CSS -----*/
+
 .calendar-remove {
     color: transparent;
     background-color: transparent;
@@ -233,11 +407,8 @@ nav .navbar-brand h2 {
     text-align: left;
 }
 
-#show-table thead tr th:nth-child(2), #show-table tbody tr td:nth-child(2) {
-    position: sticky;
-    z-index: 2;
-    left: 0;
-    background-color: #ff9f43;
+#show-table, #watchlist-header {
+    color: white;
 }
 
 #show-table thead tr th:last-child, #show-table tbody tr td:last-child,
@@ -245,17 +416,41 @@ nav .navbar-brand h2 {
     text-align: center;
 }
 
+
+@media (max-width: 768px) {
+    #show-table thead tr th:first-child, #show-table tbody tr td:first-child,
+    #show-table thead tr th:nth-child(3), #show-table tbody tr td:nth-child(3),
+    #show-table thead tr th:nth-child(4), #show-table tbody tr td:nth-child(4),
+    #show-table thead tr th:nth-child(5), #show-table tbody tr td:nth-child(5) {
+        display:none;
+    }
+
+    #buttonContainers button {
+        font-size: 1.2rem;
+        line-height: 2;
+    }
+}
+
+
 #show-table tbody tr td:nth-child(2), #show-table tbody {
-    background-color: #fff;
+    background-color: #17191b;
 }
 
 #show-table td {
     padding: 1rem 1.5rem;
+    border-top: none;
+    border-bottom: 1px solid #434546;
+}
+
+#show-table tr:last-child td {
+    border-bottom: none;
 }
 
 #show-table th {
     font-weight: 600;
     padding: 1rem 1.5rem;
+    border-bottom: none;
+    border-top: none;
 }
 
 .calendar-remove {
@@ -271,19 +466,144 @@ nav .navbar-brand h2 {
     border-color: gray;
 }
 
-#calendar {
-    padding-top: 8rem;
+.calendar-container {
+    padding-bottom: 60px;
 }
 
-@media (max-width: 768px) {
-    #show-table thead tr th:first-child, #show-table tbody tr td:first-child {
-        display:none;
+#calendar-header, #watchlist-header {
+    text-align: left;
+}
+
+.calendar-section {
+    background: #09090a45;
+}
+
+@media (min-width: 768px) {
+    .calendar-section {
+        border-radius: .5rem;
     }
+}
 
+#calendar {
+    padding: 0 15px;
+}
 
-
-    #buttonContainers button {
-        font-size: 1.2rem;
-        line-height: 2;
+@media (min-width: 768px) {
+    #calendar {
+        padding: 3rem;
     }
+}
+
+.fc-button-primary {
+    border-color: #5f27cd !important;
+    background: transparent !important;
+    color: white !important;
+ }
+
+ .fc-button-active, .fc-button-primary:hover {
+    background-color: #5f27cd!important;
+    border-color: #5f27cd !important;
+    color: white !important;
+ }
+
+ .fc-prev-button.fc-button-primary, .fc-next-button.fc-button-primary {
+    background-color: #5f27cd!important;
+    border-color: #5f27cd !important;
+    color: white !important;
+ }
+
+ .fc-prev-button.fc-button-primary:hover , .fc-next-button.fc-button-primary:hover {
+    background-color: #9f35ff !important;
+    border-color: #9f35ff !important;
+    color: white !important;
+ }
+
+ .fc-col-header a, .fc-list-day-cushion a  {
+    color: white !important;
+    font-weight: 600 !important;
+ }
+
+ .fc .fc-day-other .fc-daygrid-day-top{
+    opacity: 0.8 !important;
+ }
+
+ .fc .fc-day-other .fc-daygrid-day-top .fc-daygrid-day-number {
+     color: #5f27cd !important;
+ }
+
+ .fc-daygrid-day-number{
+    color: #9f35ff !important;
+ }
+
+ .fc-event-title {
+    font-weight: 400 !important;
+ }
+
+ .fc-toolbar-title,.fc-event-title {
+    color: white !important;
+ }
+
+ .fc-event-time, .fc-list-event-time, .fc-day-today .fc-event-time  {
+    color: #ff9f43 !important;
+ }
+
+ .fc-daygrid-event-dot, .fc-list-event-dot, .fc-day-today .fc-daygrid-event-dot {
+    border-color: #ff9f43 !important;
+ }
+
+ .fc-day-today {
+    background-color: #fff9f3 !important;
+ }
+
+ .fc-day-today .fc-event-title {
+    color: #222f3e !important;
+ }
+
+ .fc-day-today .fc-event-title:hover {
+    color: white !important;
+ }
+
+ a.fc-event:hover, .fc-list-day-cushion {
+    background: #5f27cd !important;
+ }
+
+.popover-header {
+    background-color: #5f27cd !important;
+    color: white !important;
+    padding: .25rem .75rem !important;
+}
+
+.popover .arrow {
+    top: 20px !important;
+}
+
+.fc-list td, .fc-list th {
+    border: 0 !important;
+}
+
+.fc .fc-list-event:hover td {
+    background-color: #222f3e !important;
+}
+
+.toast {
+    background-color: #17191b;
+}
+
+.toast-header {
+    background-color: #09090a45;
+    color: #1dd1a1;
+}
+
+#FailDeleteToast .toast-header, #FailAddToast .toast-header {
+    color: #e62965;
+}
+
+.toast-body {
+    color: white;
+}
+
+.close, .close:hover {
+    color: white;
+    opacity: 1;
+    font-weight: 200;
 }

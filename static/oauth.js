@@ -72,7 +72,9 @@ function updateSigninStatus(isSignedIn) {
   if (isSignedIn) {
     loginButton.style.display = "none";
     logoutButton.style.display = "block";
-    document.getElementById("clearGoogle-btn").style.display = "block";
+    if (document.getElementById("clearGoogle-btn") !== null) {
+      document.getElementById("clearGoogle-btn").style.display = "block";
+    }
     $("#accessModal").modal('hide')
     // Add bootstrap toast to signify login
   } else {
@@ -171,7 +173,9 @@ async function sync_calendar() {
                 add_request.execute(function(response){
                   $("#SuccessAddToast").toast("show");
                 }); 
-              } 
+              } else {
+                $("#FailAddToast").toast("show");
+              }
             }
           };
         };   
@@ -306,6 +310,7 @@ async function deletefrom_GCal(show_title) {
 
 
 function clear_GCal() {
+
   if (GoogleAuth.isSignedIn.get()) {
     gapi.auth.authorize({
       client_id: CLIENT_ID1 + "-" + CLIENT_ID2 + ".apps.googleusercontent.com",
@@ -315,17 +320,9 @@ function clear_GCal() {
     
     function handleAuthResult (authResult) {
       if (authResult && !authResult.error) {
-
-        function clear_cal(calendar_id) {
-          var clear_request = gapi.client.calendar.calendars.delete({
-            "calendarId": calendar_id,
-          });
-          clear_request.execute(function(response){
-            $("#SuccessClearToast").toast("show");
-          });
-        }
+        console.log("Clear executes0")
         var getcalendarList = new Promise(function(myResolve, myReject) {
-          var calendar_id;ß
+          var calendar_id;
           var request = gapi.client.calendar.calendarList.list();
           request.execute(async function(response) {
             // Get list of calendars from user's calendars and look for "Kalendar KDrama"
@@ -336,6 +333,7 @@ function clear_GCal() {
                 // return with calendar ID
                 var calendar_id = calendars[i].id
                 myResolve(calendar_id);
+                console.log(calendar_id)
                 break
               } 
             }
@@ -346,10 +344,20 @@ function clear_GCal() {
           });
         });
         getcalendarList.then(function(resolve) {
+          console.log("Clear executes1")
           clear_cal(resolve)
         }, function(reject) {
           $("#FailDeleteToast").toast("show");
         });
+        function clear_cal(calendar_id) {
+          console.log("Clear executes2")
+          var clear_request = gapi.client.calendar.calendars.delete({
+            "calendarId": calendar_id,
+          });
+          clear_request.execute(function(response){
+            $("#SuccessClearToast").toast("show");
+          });
+        }
       } else {
         console.log("Unauthorized.")
       }

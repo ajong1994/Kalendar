@@ -5,8 +5,80 @@
 {% endblock %}
 
 {% block main %}
-
-
+<div class="index-container top-section">
+    <div class="container px-md-0 py-5"> 
+        <div class="index-banner-text">
+            <h1 id="index-banner-header">
+                <span id="banner-header-1">Get your KDrama</span>fix 
+                <span id="banner-header-2">on time</span>
+            </h1>
+            <p class="index-banner-text">Never miss an episode by accident. Make your very own KDrama Kalendar.
+                <br>
+                Schedule your favorite shows' release times with a few clicks.
+            </p>
+        </div>
+        <a href="/shows" type="button" class="btn kalendar-bg-yellow" id="banner-btn">
+            Organize your KDrama
+        </a>
+    </div>
+</div>
+<div class="how-to-section kalendar-bg-dark">
+    <div class="container px-md-0 py-5"> 
+        <h2 id="how-to-header">How does it work?</h2>
+        <div class="step-odd row row-cols-1 row-cols-md-2">
+            <div class="col step-text">
+                <h3 class="how-to-number" id="how-to1">1</h3>
+                <h3 class="how-to-subheader">Search</h3>
+                <p class="how-to-text">Look through current season's list of dramas. Shows are arranged chronologically, so you'll know what's in season and what's coming soon. 
+                    If you don't find one you like, check the upcoming season's list of dramas! </p>
+            </div>
+            <div class="col">
+                <img src="static/search.png" alt="search-kdrama-pic" id="step-image-1">
+            </div>
+        </div>
+        <div class="step-even row row-cols-1 row-cols-md-2">
+            <div class="col">
+                <img src="static/select.png" alt="select-kdrama-pic" id="step-image-2">
+            </div>
+            <div class="col step-text">
+                <h3 class="how-to-number" id="how-to2">2</h3>
+                <h3 class="how-to-subheader">Select</h3>
+                <p class="how-to-text">If you see a show you fancy, tap or click the show card to see its detailed information. If it's a match and you like what you're seeing—go ahead
+                    and add it to your Kalendar and watchlist!
+                </p>
+            </div>      
+        </div>
+        <div class="step-odd row row-cols-1 row-cols-md-2">  
+            <div class="col step-text">
+                <h3 class="how-to-number align-middle" id="how-to3">3</h3>
+                <h3 class="how-to-subheader align-middle">Schedule</h3>
+                <p class="how-to-text">On the calendar page, you'll see all your selected shows plotted based on their airing times and dates.
+                    Shows are displayed in your local time.
+                </p>
+            </div>          
+            <div class="col">
+                <img src="static/schedule.png" alt="schedule-kdrama-pic" id="step-image-3">
+            </div>
+        </div>
+        <div class="step-even row row-cols-1 row-cols-md-2">
+            <div class="col">
+                <img src="static/sync.png" alt="sync-kdrama-pic" id="step-image-4">
+            </div>
+            <div class="col step-text">
+                <h3 class="how-to-number" id="how-to4">4</h3>
+                <h3 class="how-to-subheader">Sync</h3>
+                <p class="how-to-text">On the watchlist, you can sync your Kalendar to your Google Calendar. If you're done watching, you'll have the option to delete it from your synced calendar too.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+<div>and are saved in your browser. That's right, we don't get any data from you. But that also means this data gets wiped 
+    if you clear cache.
+<br>
+Kalendar doesn't touch anything else—
+                    just your Google Calendar information so events can be created and deleted. 
+</div>
 {% endblock %}
 
 

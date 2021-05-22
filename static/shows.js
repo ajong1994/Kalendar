@@ -18,18 +18,18 @@ $(function refresh_list() {
                     let product_card = $("<div class='col mb-4'></div>")
                     // append divs containing show info
                     .append($("<a href='" + dict.url + "' class='card-link' data-toggle='modal' data-target='#dramaInfo'></a>")
-                        .append($("<div class='card h-100'></div>")
+                        .append($("<div class='card h-100 kalendar-inner-dark'></div>")
                             .append($("<div class='row no-gutters'></div>")
                                 .append($("<div class='col-4'></div>")
                                     .append($("<img src='" + dict.thumbnail + "' class='card-img' alt='picture of " + dict.title + "'>"))
                                 )
-                                .append($("<div class='col-8'></div>")
-                                    .append($("<div class='card-body card-detail kalendar-navy'></div>")
+                                .append($("<div class='col-8 card-body-container'></div>")
+                                    .append($("<div class='card-body card-detail'></div>")
                                         .append($("<h5>" + dict.title + "</h5>"))
-                                        .append($("<p class='card-text pb-3 desktop-only'><span class='kalendar-violet'>Synopsis: </span>" + dict.synopsis + "</p>"))
-                                        .append($("<p class='card-text'><span class='kalendar-violet'>Episodes: </span>" + dict.episodes + "</p>"))
-                                        .append($("<p class='card-text'><span class='kalendar-violet'>Genres: </span>" + dict.genres +"</p>"))
-                                        .append($("<p class='card-text'><span class='kalendar-violet'>Release Date: </span>" + dict.released_at +"</p>"))
+                                        .append($("<p class='card-text pb-3 desktop-only'><span class='kalendar-violet-od'>Synopsis: </span>" + dict.synopsis + "</p>"))
+                                        .append($("<p class='card-text'><span class='kalendar-violet-od'>Episodes: </span>" + dict.episodes + "</p>"))
+                                        .append($("<p class='card-text'><span class='kalendar-violet-od'>Genres: </span>" + dict.genres +"</p>"))
+                                        .append($("<p class='card-text'><span class='kalendar-violet-od'>Release Date: </span>" + dict.released_at +"</p>"))
                                     )
                                     .append($("<div class='card-buttons'></div>")
                                         // .append($("<button type='button' class='btn btn-primary see-btn' data-toggle='modal' data-target='#dramaInfo' value='" + dict.url + "'>See More</button>"))
@@ -56,7 +56,6 @@ $(function fill_modal() {
     $("body").on("click", ".card-link", function() {
         modify_modal();
         let self = $(this);
-        console.log(self)
         $.ajax({
             type : "POST",
             url : "/shows",
@@ -65,7 +64,6 @@ $(function fill_modal() {
             contentType: 'application/json;charset=UTF-8',
             success: function(data) {
                 show_data = data;
-                console.log(data);
                 modify_modal(data);
             },
             error:  function(data) {
@@ -97,12 +95,12 @@ async function modify_modal(data="None") {
     else {
         $("#dramaInfoModalLabel").html(data.title);
         $(".dramaInfotempImage").replaceWith("<img src='" + data.poster + "' class='dramaModalImage' alt='picture of " + data.title + "'>")
-        $("#dramaInfoLine1").html("<span class='kalendar-violet info-subheader'>Synopsis: </span>" + data.synopsis);
-        $("#dramaInfoLine2").html("<span class='kalendar-violet info-subheader'>Cast: </span>" + data.cast.join(", "));
-        $("#dramaInfoLine3").html("<span class='kalendar-violet info-subheader'>Episodes: </span>" + data.episodes);
-        $("#dramaInfoLine4").html("<span class='kalendar-violet info-subheader'>Airing dates: </span>" + data.air_date);
-        $("#dramaInfoLine5").html("<span class='kalendar-violet info-subheader'>Schedule: </span>" + data.aired_on);
-        $("#dramaInfoLine6").html("<span class='kalendar-violet info-subheader'>Genres: </span>"+ data.genres);
+        $("#dramaInfoLine1").html("<span class='kalendar-violet-od info-subheader'>Synopsis: </span>" + data.synopsis);
+        $("#dramaInfoLine2").html("<span class='kalendar-violet-od info-subheader'>Cast: </span>" + data.cast.join(", "));
+        $("#dramaInfoLine3").html("<span class='kalendar-violet-od info-subheader'>Episodes: </span>" + data.episodes);
+        $("#dramaInfoLine4").html("<span class='kalendar-violet-od info-subheader'>Airing dates: </span>" + data.air_date);
+        $("#dramaInfoLine5").html("<span class='kalendar-violet-od info-subheader'>Schedule: </span>" + data.aired_on);
+        $("#dramaInfoLine6").html("<span class='kalendar-violet-od info-subheader'>Genres: </span>"+ data.genres);
         // This async function waits for the promise from the checkdb function to
         // make sure it's comparing the final result and not a premature undefined
         if (await checkdb() !== undefined) {
