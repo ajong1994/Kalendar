@@ -5,6 +5,7 @@ from flask import Flask, render_template, request, session, jsonify
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from helper import apology, generate, fetch
 from getDate import year_now, quarter_now, year_next, quarter_next1, quarter_next2
+from flask_talisman import Talisman
 
 # Load GAPI credentials from env
 load_dotenv()
@@ -12,6 +13,26 @@ load_dotenv()
 
 # Configure application
 app = Flask(__name__)
+csp = {
+    'default-src': [
+        '\'self\'',
+        '\'unsafe-inline\'',
+        'stackpath.bootstrapcdn.com',
+        'code.jquery.com',
+        'cdn.jsdelivr.net',
+        'unpkg.com',
+        'fonts.gstatic.com',
+        'fonts.googleapis.com',
+        'content.googleapis.com',
+        'accounts.google.com',
+        'apis.google.com',
+        'i.mydramalist.com'
+    ],
+    'font-src': ['\'self\'', '*', 'blob:', 'data:']
+}
+talisman = Talisman(app, content_security_policy=csp)
+
+
 
 # Ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
@@ -36,6 +57,9 @@ def about_us():
 def privacy():
     return render_template("privacy.html")
 
+@app.route("/terms", methods=["GET"])
+def terms():
+    return render_template("terms.html")
 
         
 @app.route("/refresh", methods=["POST"])
@@ -102,3 +126,5 @@ def errorhandler(e):
 # Listen for errors
 for code in default_exceptions:
     app.errorhandler(code)(errorhandler)
+
+app.run(host='127.0.0.1', port=5000, ssl_context=('adhoc'))
