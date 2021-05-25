@@ -883,6 +883,12 @@ nav .navbar-brand h3 {
     color: #17191b;
 }
 
+.toast-header .close, .toast-header .close:hover {
+    color: black;
+    opacity: 1;
+    font-weight: 200;
+}
+
 .close, .close:hover {
     color: white;
     opacity: 1;
