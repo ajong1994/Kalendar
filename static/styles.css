@@ -180,7 +180,7 @@ nav .navbar-brand h3, h2, h1 {
 }
 
 h2 {
-    font-size: 2.5rem;
+    font-size: 2rem;
 }
 
 nav .navbar-brand h3 {
@@ -270,6 +270,7 @@ nav .navbar-brand h3 {
 .footer-container {
     padding-top: 2rem;
     text-align: center;
+    font-size: 0.75rem;
 }
 
 .footer-container a {
@@ -281,6 +282,9 @@ nav .navbar-brand h3 {
 
 .footer-container ul {
     padding: 0;
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
 }
 
 .footer-links li {
@@ -311,6 +315,13 @@ nav .navbar-brand h3 {
     }
     .footer-container {
         text-align: left;
+    }
+
+    .footer-container ul {
+        padding: 0;
+        margin-left: 0;
+        margin-right: 0;
+        width: 100%;
     }
 }
 /*----- end of theme CSS -----*/
@@ -374,13 +385,17 @@ nav .navbar-brand h3 {
     margin-top: 2rem;
 }
 
-#how-to-header, #we-do-header {
-    font-size: 3rem;
+#how-to-header {
+    font-size: 2rem;
+}
+
+#we-do-header {
+    font-size: 1.5rem;
 }
 
 .how-to-number {
     font-weight: 800;
-    font-size: 10rem;
+    font-size: 7rem;
     display: inline-block;
     color: #9f35ff;
     transform: translate(-60%, -40%);
@@ -393,7 +408,7 @@ nav .navbar-brand h3 {
 
 .how-to-subheader {
     font-weight: 600;
-    font-size: 4rem;
+    font-size: 3rem;
     display: inline-block;
     z-index: 1;
     position: relative;
@@ -418,7 +433,7 @@ nav .navbar-brand h3 {
 }
 
 .how-to-text {
-    font-size: 1.4rem;
+    font-size: 1.2rem;
     text-align: left;
 }
 
@@ -531,7 +546,7 @@ nav .navbar-brand h3 {
     background-size: contain;
     background-repeat: no-repeat;
     background-position: 100%;
-    padding-top: 8rem;
+    padding-top: 5rem;
     height: 400px;
 }
 
@@ -578,6 +593,10 @@ nav .navbar-brand h3 {
     border: none;
 }
 
+.card-text {
+    font-size: 0.75rem;
+}
+
 .card-body-container {
     border-radius: .25rem;
     border-right: 4px solid transparent;
@@ -590,6 +609,7 @@ nav .navbar-brand h3 {
 .card-body h5 {
     font-weight: 600;
     padding-bottom: 1rem;
+    font-size: 1rem;
 }
 
 #dramaInfoModalLabel {
@@ -650,6 +670,10 @@ nav .navbar-brand h3 {
         width: 64%;
         margin: auto;
     }
+
+    .card-text {
+        font-size: 0.85rem;
+    }
 }
 
 #dramaInfoModalBody {
@@ -697,6 +721,9 @@ nav .navbar-brand h3 {
     text-align: center;
 }
 
+.table-container {
+    padding-bottom: 3rem;
+}
 
 @media (max-width: 768px) {
     #show-table thead tr th:first-child, #show-table tbody tr td:first-child,
@@ -707,7 +734,7 @@ nav .navbar-brand h3 {
     }
 
     #buttonContainers button {
-        font-size: 1.2rem;
+        font-size: 1rem;
         line-height: 2;
     }
 }

@@ -84,7 +84,7 @@ def index():
         credentials = {}
         credentials["GC_ID1"] = os.getenv('GC_CLIENT_ID1')
         credentials["GC_ID2"] = os.getenv('GC_CLIENT_ID2')
-        credentials["API_KEY"] = os.getenv('API_KEY')
+        credentials["API_SECRET"] = os.getenv('API_KEY')
         return jsonify(credentials)
     else:
         return render_template("index.html")
