@@ -64,6 +64,7 @@ $(function fill_modal() {
             contentType: 'application/json;charset=UTF-8',
             success: function(data) {
                 show_data = data;
+                console.log(show_data)
                 modify_modal(data);
             },
             error:  function(data) {
@@ -113,14 +114,15 @@ async function modify_modal(data="None") {
         }
         // If show has an undefined ending date, a "?" from source, display schedule incomplete
         try {
-            if (data.network.split(" ")[0] == "Netflix") {
+            // Check if network is Netflix because most Netflix shows don't have an ending date indicated since they drop in one day
+            if (data.network.indexOf("Netflix") !== -1) {
                 let errortest = dateConvert(data.air_date.split(" - ")[0]).toISOString();
             } else {
                 let errortest = dateConvert(data.air_date.split(" - ")[0], data.airingtime).toISOString();
                 let errortest2 = dateConvert(data.air_date.split(" - ")[1], data.airingtime).toISOString();
             }    
         } catch(RangeError) {
-            console.log("errortest");
+            console.log("Error with date format");
             $("#AddShow").prop("disabled", true);
             $("#AddShow").html("Schedule Incomplete");
         }
@@ -174,6 +176,8 @@ async function addtodb(){
             localshowtime: new Date(parseInt(show_data.airing_time)*1000).toISOString(),
             duration: parseInt(show_data.duration)*60*1000,
             calendar_endDateTime: dateConvert(air_dates_temp_start,show_data.airing_time,show_data.duration).toISOString(),
+            // Get unique entries 
+            network: [...new Set(show_data.network)]
         })
         // Hide add button and replace with remove button
         addbutton.hidden = true;

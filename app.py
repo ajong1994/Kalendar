@@ -1,10 +1,8 @@
 import os
 import json
 from dotenv import load_dotenv
-from flask import Flask, flash, redirect, render_template, request, session, jsonify
-from tempfile import mkdtemp
+from flask import Flask, render_template, request, session, jsonify
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
-from werkzeug.security import check_password_hash, generate_password_hash
 from helper import apology, generate, fetch
 from getDate import year_now, quarter_now, year_next, quarter_next1, quarter_next2
 
@@ -26,16 +24,18 @@ def after_request(response):
     response.headers["Pragma"] = "no-cache"
     return response
 
-@app.route("/calendar", methods=["GET", "POST"])
+@app.route("/kalendar", methods=["GET"])
 def calendar():
-    """ when accessed via POST using see more button on cards """
-    if request.method == "POST":
-        specific_show = request.json["handle"]
-        show_info = jsonify(fetch(specific_show))
-        return show_info
-    else:
-        """Show list of shows"""
-        return render_template("calendar.html")
+    return render_template("kalendar.html")
+
+@app.route("/about-us", methods=["GET"])
+def about_us():
+    return render_template("about-us.html")
+
+@app.route("/privacy", methods=["GET"])
+def privacy():
+    return render_template("privacy.html")
+
 
         
 @app.route("/refresh", methods=["POST"])
@@ -72,6 +72,7 @@ def shows():
         korean_shows = generate(year_now(),quarter_now())
         quarter = quarter_now()
         return render_template("shows.html", list=korean_shows, quarter=quarter)
+        
 
 @app.route("/login", methods=["GET"])
 def login():

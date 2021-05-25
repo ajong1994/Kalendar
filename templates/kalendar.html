@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block main %}
-<div class="calendar-container top-section kalendar-bg-dark">
+<div class="calendar-container kalendar-bg-dark">
   <h2 class="container px-md-0 mb-4"id="calendar-header">Your Kalendar</h2>
   <div class="container px-0 calendar-section">
     <div id="calendar"></div>
@@ -17,8 +17,8 @@
     <div class="table-responsive">
       <table id="show-table" class="table"></table>
     </div>
-    <div class="alert alert-danger" id="calendar-alert" role="alert" hidden>
-      You currently don't have any shows in your watch list. Browse the <a href="/shows" class="alert-link">catalogue</a> to add some!
+    <div class="alert kalendar-alert-red" id="calendar-alert" role="alert" hidden>
+      You currently don't have any shows in your watch list. Browse the <a href="/shows">catalogue</a> to add some!
     </div>
     <div id="buttonContainers" class="d-flex pt-3 flex-column flex-md-row-reverse"> 
       <button type="button" class="btn kalendar-bg-violet my-2" id="sync-btn" style="display:none">Sync to Google Calendar</button>

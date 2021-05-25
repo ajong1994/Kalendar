@@ -163,7 +163,7 @@ async function sync_calendar() {
                   "recurrence": [
                     "RRULE:FREQ=WEEKLY;UNTIL=" + shows[i].calendar_endRecur + ";BYDAY=" + shows[i].airing_days + ";WKST=MO"
                   ],
-                  "description": "Shown on" + shows[i].network
+                  "description": "Shown on " + shows[i].network.join(", ")
                 }
                 var add_request = gapi.client.calendar.events.insert({
                   "calendarId": calendar_id,
@@ -250,7 +250,6 @@ async function deletefrom_GCal(show_title) {
           })
          
           checkcal.then(function(events){
-            console.log(events)
             deletefromGoogle(events);
           });
 
@@ -258,9 +257,6 @@ async function deletefrom_GCal(show_title) {
             // Create a function to add an event object to gcal_events array for every show in localbase
             // Currently uses count to add event instances but should change it to end date so that netflix shows only show up once
               if (showTitle in showList) {
-                console.log(showTitle)
-                console.log(showList)
-                console.log(showList[showTitle])
                 var add_request = gapi.client.calendar.events.delete({
                   "calendarId": calendar_id,
                   "eventId": showList[showTitle]
@@ -320,7 +316,6 @@ function clear_GCal() {
     
     function handleAuthResult (authResult) {
       if (authResult && !authResult.error) {
-        console.log("Clear executes0")
         var getcalendarList = new Promise(function(myResolve, myReject) {
           var calendar_id;
           var request = gapi.client.calendar.calendarList.list();
@@ -333,7 +328,6 @@ function clear_GCal() {
                 // return with calendar ID
                 var calendar_id = calendars[i].id
                 myResolve(calendar_id);
-                console.log(calendar_id)
                 break
               } 
             }
@@ -344,13 +338,11 @@ function clear_GCal() {
           });
         });
         getcalendarList.then(function(resolve) {
-          console.log("Clear executes1")
           clear_cal(resolve)
         }, function(reject) {
           $("#FailDeleteToast").toast("show");
         });
         function clear_cal(calendar_id) {
-          console.log("Clear executes2")
           var clear_request = gapi.client.calendar.calendars.delete({
             "calendarId": calendar_id,
           });

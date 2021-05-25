@@ -23,11 +23,11 @@ def crawl(slug):
             soup = BeautifulSoup(drama_page_resp.text, "html.parser") 
             break
         except:
-            print('Drama page request failed. Retrying...')
+            print("Request failed.")
             time.sleep(3)
 
-    if drama_page_resp.status_code != 200: # I'm assuming wrongly here that the only statuses are 200 and 404. It met my requirements, though.
-        print('Drama page doesn\'t exist. Skipping...')
+    if drama_page_resp.status_code != 200:
+        print("Drama page does not exist.")
         return 404
 
     # get the main html container for the each search results
