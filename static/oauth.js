@@ -2,10 +2,11 @@
 $('.toast').toast()
 
 // Client ID and API key via AJAX call from server
-function get_env() {
-  var CLIENT_ID1;
-  var CLIENT_ID2;
-  var API_KEY;
+
+var CLIENT_ID1;
+var CLIENT_ID2;
+var API_KEY;
+function get_env(){
   $.ajax({
     type : "POST",
     url : "/",
@@ -14,13 +15,15 @@ function get_env() {
       CLIENT_ID1 = data.GC_ID1;
       CLIENT_ID2 = data.GC_ID2;
       API_KEY = data.API_SECRET;
-      handleClientLoad(CLIENT_ID1, CLIENT_ID2, API_KEY);
+      handleClientLoad();
     },
     error:  function(data) {
       console.log("error getting API keys")
     }
   });
 }
+
+
 
 
 
@@ -37,8 +40,8 @@ var logoutButton = document.getElementById('logout_button');
 /**
  *  On load, called to load the auth2 library and API client library.
  */
-function handleClientLoad(CLIENT_ID1, CLIENT_ID2, API_KEY) {
-  gapi.load('client:auth2', initClient(CLIENT_ID1, CLIENT_ID2, API_KEY));
+function handleClientLoad() {
+  gapi.load('client:auth2', initClient);
 }
 
 /**
@@ -48,7 +51,7 @@ function handleClientLoad(CLIENT_ID1, CLIENT_ID2, API_KEY) {
  /*gapi.auth.authorize({client_id: clientId, scope: scopes, immediate: true}, callbackAuthResult);*/
   
 var GoogleAuth;
-function initClient(CLIENT_ID1, CLIENT_ID2, API_KEY) {
+function initClient() {
   gapi.client.init({
     apiKey: API_KEY,
     clientId: CLIENT_ID1 + "-" + CLIENT_ID2 + ".apps.googleusercontent.com",
