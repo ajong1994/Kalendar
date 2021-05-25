@@ -437,11 +437,6 @@ nav .navbar-brand h3 {
     text-align: left;
 }
 
-#we-do-header {
-    margin: 0 auto 5rem auto;
-    width: 80%;
-}
-
 #more-watching {
     position: relative;
     padding-bottom: 8px;
@@ -473,12 +468,18 @@ nav .navbar-brand h3 {
     border-radius: .5rem;
 }
 
-.we-do-header {
+.we-do-subheader {
     color: #5f27cd;
     margin-left: 20px;
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: 600;
     align-self: flex-end;
+}
+
+#we-do-header {
+    margin: 0 auto 5rem auto;
+    font-size: 2.25rem;
+    width: 80%;
 }
 
 .we-do-info {
@@ -500,7 +501,7 @@ nav .navbar-brand h3 {
     }
 
     #how-to-header, #we-do-header {
-        font-size: 4rem;
+        font-size: 3rem;
     }
 
     #how-to3 {
@@ -519,16 +520,21 @@ nav .navbar-brand h3 {
         width: 20%;
     }
 
-    .we-do-header {
-        margin-left: 0px;
+    .we-do-subheader {
+        margin: 5px 0px;
+        align-self: flex-start;
+        color: #5f27cd;
+        font-size: 2rem;
+        font-weight: 600;
     }
 
     #more-watching::after {
         bottom: 16px;
     }
 
-    .we-do-header {
-    align-self: flex-start;
+    .how-to-text {
+        font-size: 1.4rem;
+        text-align: left;
     }
 }
 /*----- end of index CSS -----*/
@@ -964,6 +970,7 @@ nav .navbar-brand h3 {
     color: white;
     padding-top: 5rem;
     font-size: 2.5rem;
+    font-weight: 600;
 }
 
 .about-container p {
