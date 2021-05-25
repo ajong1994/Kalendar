@@ -14,7 +14,7 @@ function get_env() {
       CLIENT_ID1 = data.GC_ID1;
       CLIENT_ID2 = data.GC_ID2;
       API_KEY = data.API_SECRET;
-      handleClientLoad();
+      handleClientLoad(CLIENT_ID1, CLIENT_ID2, API_KEY);
     },
     error:  function(data) {
       console.log("error getting API keys")
@@ -37,8 +37,8 @@ var logoutButton = document.getElementById('logout_button');
 /**
  *  On load, called to load the auth2 library and API client library.
  */
-function handleClientLoad() {
-  gapi.load('client:auth2', initClient);
+function handleClientLoad(CLIENT_ID1, CLIENT_ID2, API_KEY) {
+  gapi.load('client:auth2', initClient(CLIENT_ID1, CLIENT_ID2, API_KEY));
 }
 
 /**
@@ -48,7 +48,7 @@ function handleClientLoad() {
  /*gapi.auth.authorize({client_id: clientId, scope: scopes, immediate: true}, callbackAuthResult);*/
   
 var GoogleAuth;
-function initClient() {
+function initClient(CLIENT_ID1, CLIENT_ID2, API_KEY) {
   gapi.client.init({
     apiKey: API_KEY,
     clientId: CLIENT_ID1 + "-" + CLIENT_ID2 + ".apps.googleusercontent.com",
