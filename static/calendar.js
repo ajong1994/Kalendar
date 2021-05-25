@@ -21,14 +21,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     calendar = new FullCalendar.Calendar(calendarEl, {
         // Solution derived from Simon Botero's answer on https://stackoverflow.com/questions/41908295/fullcalendar-change-view-for-mobile-devices
         initialView: mobileviewCheck() ? "listMonth" : "dayGridMonth",
-        contentHeight: mobileviewCheck() ? 550 : "auto",
-        windowResize: function () {
-            if (mobileviewCheck()) {
-                calendar.changeView("listMonth");
-            } else {
-                calendar.changeView("dayGridMonth");
-            }
-        },
+        contentHeight: mobileviewCheck() ? 400 : "auto",
         headerToolbar: {
             left: "dayGridMonth,listMonth",
             center: "title",
