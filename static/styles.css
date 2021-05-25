@@ -45,8 +45,8 @@ nav .navbar-brand
 }
 
 .kalendar-bg-yellow {
-    background-color: #ff9f43;
-    border-color: #ff9f43;
+    background-color: rgb(255,159,67);
+    border-color: rgb(255,159,67);
     color: #17191b;
 }
 
@@ -389,10 +389,6 @@ nav .navbar-brand h3 {
     font-size: 2rem;
 }
 
-#we-do-header {
-    font-size: 1.5rem;
-}
-
 .how-to-number {
     font-weight: 800;
     font-size: 7rem;
@@ -423,7 +419,7 @@ nav .navbar-brand h3 {
 }
 
 .step-btn {
-    font-size: 1.4rem;
+    font-size: 1.2rem;
     margin-top: 1rem;
     padding: 0.5rem 1rem;
 }
@@ -478,7 +474,7 @@ nav .navbar-brand h3 {
 
 #we-do-header {
     margin: 0 auto 5rem auto;
-    font-size: 2.25rem;
+    font-size: 2rem;
     width: 80%;
 }
 
@@ -514,6 +510,12 @@ nav .navbar-brand h3 {
 
     #step-text-1, #step-text-3, #step-text-4 {
         padding-top: 7%
+    }
+
+    .step-btn {
+        font-size: 1.4rem;
+        margin-top: 1rem;
+        padding: 0.5rem 1rem;
     }
 
     .we-do-column img {
@@ -992,15 +994,16 @@ nav .navbar-brand h3 {
 /* End of about us page CSS */
 
 /* Start of privacy page CSS */
-.privacy-container {
+.privacy-container, .terms-container {
     padding-top: 5rem;
 }
 
-.privacy-container h3, .privacy-container li, .privacy-container p {
+.privacy-container h3, .privacy-container li, .privacy-container p,
+.terms-container h3, .terms-container p {
     text-align: left;
 }
 
-.privacy-container a{
+.privacy-container a, .terms-container a{
     color: #5f27cd;
 }
 /* End of privacy page CSS */
