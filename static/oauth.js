@@ -2,22 +2,26 @@
 $('.toast').toast()
 
 // Client ID and API key via AJAX call from server
-var CLIENT_ID1;
-var CLIENT_ID2;
-var API_KEY;
-$.ajax({
-  type : "POST",
-  url : "/",
-  contentType: 'application/json;charset=UTF-8',
-  success: function(data) {
-    CLIENT_ID1 = data.GC_ID1;
-    CLIENT_ID2 = data.GC_ID2;
-    API_KEY = data.API_SECRET;
-  },
-  error:  function(data) {
-    console.log("error getting API keys")
-  }
-});
+function get_env() {
+  var CLIENT_ID1;
+  var CLIENT_ID2;
+  var API_KEY;
+  $.ajax({
+    type : "POST",
+    url : "/",
+    contentType: 'application/json;charset=UTF-8',
+    success: function(data) {
+      CLIENT_ID1 = data.GC_ID1;
+      CLIENT_ID2 = data.GC_ID2;
+      API_KEY = data.API_SECRET;
+      handleClientLoad();
+    },
+    error:  function(data) {
+      console.log("error getting API keys")
+    }
+  });
+}
+
 
 
 // Array of API discovery doc URLs for APIs used by the quickstart
