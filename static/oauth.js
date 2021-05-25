@@ -13,7 +13,6 @@ $.ajax({
     CLIENT_ID1 = data.GC_ID1;
     CLIENT_ID2 = data.GC_ID2;
     API_KEY = data.API_SECRET;
-    console.log(data)
   },
   error:  function(data) {
     console.log("error getting API keys")
