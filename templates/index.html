@@ -5,80 +5,128 @@
 {% endblock %}
 
 {% block main %}
-<div class="index-container top-section">
+<div class="index-container">
     <div class="container px-md-0 py-5"> 
-        <div class="index-banner-text">
-            <h1 id="index-banner-header">
-                <span id="banner-header-1">Get your KDrama</span>fix 
-                <span id="banner-header-2">on time</span>
-            </h1>
-            <p class="index-banner-text">Never miss an episode by accident. Make your very own KDrama Kalendar.
-                <br>
-                Schedule your favorite shows' release times with a few clicks.
-            </p>
+        <div class="d-flex flex-column flex-md-row">
+            <div class="col banner-col-1">
+                <div class="index-banner-text">
+                    <h1 id="index-banner-header">
+                        <span id="banner-header-1">Get your KDrama</span>fix 
+                        <span id="banner-header-2">on time</span>
+                    </h1>
+                    <p class="index-banner-text">Never miss an episode by accident. Make your very own KDrama Kalendar.
+                        <br>
+                        Schedule your favorite shows' release times with a few clicks.
+                    </p>
+                </div>
+                <a href="/shows" type="button" class="btn kalendar-bg-yellow" id="banner-btn">
+                    Organize your KDrama
+                </a>
+            </div>
+            <div class="col banner-col-2">
+                <img src="static/banner-image.png" alt="picture of couple watching tv" id="banner-image">
+            </div>
         </div>
-        <a href="/shows" type="button" class="btn kalendar-bg-yellow" id="banner-btn">
-            Organize your KDrama
-        </a>
     </div>
 </div>
 <div class="how-to-section kalendar-bg-dark">
     <div class="container px-md-0 py-5"> 
-        <h2 id="how-to-header">How does it work?</h2>
-        <div class="step-odd row row-cols-1 row-cols-md-2">
-            <div class="col step-text">
+        <h2 id="how-to-header" class="kalendar-yellow">How it works</h2>
+        <div class="d-flex flex-column flex-md-row-reverse step-section">
+            <div class="col">
+                <img src="static/search.png" alt="group of friends with question marks above their heads" id="step-image-1">
+            </div>
+            <div class="col step-text" id="step-text-1">
                 <h3 class="how-to-number" id="how-to1">1</h3>
                 <h3 class="how-to-subheader">Search</h3>
-                <p class="how-to-text">Look through current season's list of dramas. Shows are arranged chronologically, so you'll know what's in season and what's coming soon. 
-                    If you don't find one you like, check the upcoming season's list of dramas! </p>
-            </div>
-            <div class="col">
-                <img src="static/search.png" alt="search-kdrama-pic" id="step-image-1">
+                <p class="how-to-text">Look through current season's list of dramas. Shows are arranged chronologically, so you'll know what's in season and what's coming soon. </p>
+                <a href="/shows" type="button" class="btn kalendar-violet-od-hollow step-btn">
+                    Search for shows
+                </a>
             </div>
         </div>
-        <div class="step-even row row-cols-1 row-cols-md-2">
+        <div class="d-flex flex-column flex-md-row step-section">
             <div class="col">
-                <img src="static/select.png" alt="select-kdrama-pic" id="step-image-2">
+                <img src="static/select.png" alt="screenshot of Kalendar user interface with a close up on the KDrama 'Mine'" id="step-image-2">
             </div>
-            <div class="col step-text">
+            <div class="col step-text" id="step-text-2">
                 <h3 class="how-to-number" id="how-to2">2</h3>
                 <h3 class="how-to-subheader">Select</h3>
-                <p class="how-to-text">If you see a show you fancy, tap or click the show card to see its detailed information. If it's a match and you like what you're seeing—go ahead
+                <p class="how-to-text">If you see a show that interests you, tap or click the show card to reveal its detailed information. If it's a match—go ahead
                     and add it to your Kalendar and watchlist!
                 </p>
             </div>      
         </div>
-        <div class="step-odd row row-cols-1 row-cols-md-2">  
-            <div class="col step-text">
+        <div class="d-flex flex-column flex-md-row-reverse step-section">  
+            <div class="col">
+                <img src="static/schedule.png" alt="vector image of a guy in front of a calendar" id="step-image-3">
+            </div>
+            <div class="col step-text" id="step-text-3">
                 <h3 class="how-to-number align-middle" id="how-to3">3</h3>
                 <h3 class="how-to-subheader align-middle">Schedule</h3>
                 <p class="how-to-text">On the calendar page, you'll see all your selected shows plotted based on their airing times and dates.
                     Shows are displayed in your local time.
                 </p>
-            </div>          
-            <div class="col">
-                <img src="static/schedule.png" alt="schedule-kdrama-pic" id="step-image-3">
-            </div>
+                <a href="/calendar" type="button" class="btn kalendar-violet-od-hollow step-btn">
+                    Check your calendar
+                </a>
+            </div>   
         </div>
-        <div class="step-even row row-cols-1 row-cols-md-2">
+        <div class="d-flex flex-column flex-md-row step-section">
             <div class="col">
-                <img src="static/sync.png" alt="sync-kdrama-pic" id="step-image-4">
+                <img src="static/sync.png" alt="screenshots of the calendar user interface and google calendar with the google calendar logo" id="step-image-4">
             </div>
-            <div class="col step-text">
+            <div class="col step-text" id="step-text-4">
                 <h3 class="how-to-number" id="how-to4">4</h3>
                 <h3 class="how-to-subheader">Sync</h3>
-                <p class="how-to-text">On the watchlist, you can sync your Kalendar to your Google Calendar. If you're done watching, you'll have the option to delete it from your synced calendar too.
+                <p class="how-to-text">On the watchlist, you can sync your Kalendar to your Google Calendar. You'll have the option to delete it from Google too. (You'll need to Authorize Google.)
                 </p>
             </div>
         </div>
     </div>
 </div>
-<div>and are saved in your browser. That's right, we don't get any data from you. But that also means this data gets wiped 
-    if you clear cache.
-<br>
-Kalendar doesn't touch anything else—
-                    just your Google Calendar information so events can be created and deleted. 
+<div class="kalendar-bg-neutral">
+    <div class="container px-md-0 py-5"> 
+        <h2 id="we-do-header" class="kalendar-navy"> Less planning, <span id="more-watching">more watching</span></h2>
+        <div class="d-flex flex-column flex-md-row we-do-info">
+            <div class="col we-do-column px-3">
+                <div class="d-flex flex-row flex-md-column">
+                    <img src="static/cloud.png">
+                    <h5 class="we-do-header">
+                        No Data Saved
+                    </h5>
+                </div>
+                <p class="we-do-text">
+                    Kalendar does not store any user data on its servers. Any calendar info is saved directly on Google Calendar. Your watchlist is saved locally on your device's browser. 
+                </p>
+            </div>
+            <div class="col we-do-column px-3">
+                <div class="d-flex flex-row flex-md-column">
+                    <img src="static/mouse.png">
+                    <h5 class="we-do-header">
+                        Ease of Use
+                    </h5>
+                </div>
+                <p class="we-do-text">
+                    It takes as little as 5 taps to add a show to your Google Calendar from the home page. Even less if you're just using your Kalendar. 
+                </p>
+            </div>
+            <div class="col we-do-column px-3">
+                <div class="d-flex flex-row flex-md-column">
+                    <img src="static/clock.png">
+                    <h5 class="we-do-header">
+                        Local Times
+                    </h5>
+                </div>
+                <p class="we-do-text">
+                    We know how frustrating it is to have to convert from Seoul air times. On Kalendar, everything is shown according to your device's time zone. 
+                </p>
+            </div>
+        </div>
+    </div>
 </div>
+
+
 {% endblock %}
 
 

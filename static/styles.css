@@ -14,6 +14,12 @@ nav .navbar-brand
    color: white;
 }
 
+.kalendar-nav-violet {
+    background-color: #5f27cd;
+    border-color: #5f27cd;
+    color: white;
+ }
+
 .kalendar-violet-hollow {
     border-color: #5f27cd;
     color: white;
@@ -23,7 +29,12 @@ nav .navbar-brand
     color: #9f35ff;
 }
 
-.kalendar-bg-violet:active, .kalendar-bg-violet:hover {
+.kalendar-violet-od-hollow {
+    border-color: #9f35ff;
+    color: white;
+}
+
+.kalendar-bg-violet:active, .kalendar-bg-violet:hover, .kalendar-violet-od-hollow:hover {
     background-color: #9f35ff !important;
     border-color: #9f35ff !important;
     color: white !important;
@@ -45,25 +56,17 @@ nav .navbar-brand
     color: #17191b;
 }
 
-.kalendar-teal {
-    color: #1dd1a1;
-}
-.kalendar-bg-teal {
-    background-color: #1dd1a1;
-    border-color: #1dd1a1;
-    color: #222f3e
-}
-
 .kalendar-red {
     background-color: transparent;
     border-color: #e62965;
     color: #e62965;
 }
 
-.kalendar-red:hover {
+.kalendar-red:hover, .kalendar-alert-red {
     background-color: #e62965;
     border-color: #e62965;
     color: white;
+    opacity: 0.9;
 }
 
 .kalendar-bg-white {
@@ -74,6 +77,17 @@ nav .navbar-brand
 
 .kalendar-bg-white:active, .kalendar-bg-white:hover {
     background-color: #efefef;
+}
+
+.kalendar-white-hollow {
+    border-color: white;
+    color: white;
+}
+
+.kalendar-white-hollow:hover {
+    border-color: white;
+    background-color: white;
+    color: #5f27cd;
 }
 
 .kalendar-navy {
@@ -92,6 +106,7 @@ nav .navbar-brand
 
 .kalendar-bg-darker {
     background-color: #141417;
+    color: white;
 }
 
 .kalendar-inner-dark {
@@ -99,12 +114,15 @@ nav .navbar-brand
     color: white;
 }
 
+/*----- start of theme CSS -----*/
+
 header {
-    position: fixed;
-    left: 0;
-    top: 0;
     width: 100%;
-    z-index: 1051;
+    background: transparent;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 2;
 }
 
 main .form-control
@@ -134,11 +152,19 @@ main img
 .top-section {
     padding-top: 15rem !important;
 }
-/*----- start of theme CSS -----*/
+
 #nav-logo {
     width: 30px;
     height: auto;
     margin-right: 5px;
+}
+
+.navbar a {
+    color: white;
+}
+
+.navbar .nav-link.active {
+    color: #ff9f43;
 }
 
 p, span, a, label, th, td, button, .popover {
@@ -162,10 +188,69 @@ nav .navbar-brand h3 {
     display: inline-block;
 }
 
-@media (min-width: 768px) {
-    .navbar-nav .nav-link, #navbar button {
-        font-size: 1.2rem;
-    }
+.nav-bar-icon {
+    color: white;
+    font-size: 2rem;
+}
+
+/* entire underline slide code from https://www.codexpedia.com/css/css-sliding-underline-effect-on-hover/ */
+.slide-in-out 
+{
+    text-decoration:none;
+    color:white;
+    display: inline-block;
+    position: relative; /* prepare the position for sliding in and out */
+}
+/* add a empty string before the elment with class .slide-in-out  */
+.slide-in-out:before 
+{
+    content: '';
+    display: block;
+    height: 3px;
+    width: 0;
+    transition: width 0s ease, background-color .5s ease;
+    -webkit-transition: width 0s ease, background-color .5s ease;
+    -moz-transition: width 0s ease, background-color .5s ease;
+     
+    /* position the content to the left bottom corner of the parent element to make it to slide in from left to right on hover */
+    position: absolute;
+    left: 0;
+    bottom: 0;
+}
+/* add a empty string after the elment with class .slide-in-out  */
+.slide-in-out:after 
+{
+    content: '';
+    display: block;
+    height: 3px;
+    width: 0;
+    background: white;
+    transition: width .5s ease;
+    -webkit-transition: width .5s ease, background-color .5s ease;
+    -moz-transition: width .5s ease, background-color .5s ease;
+     
+    /* position the content to the left bottom corner of the parent element to make it to slide out from left to right on hover */
+    position: absolute;
+    right: 0;
+    bottom: 0;
+}
+ 
+/* Change the width and background on hover, aka sliding in and out */
+.slide-in-out:hover:before 
+{
+    width: 100%;
+    background: white;
+    transition: width .5s ease;
+    -webkit-transition: width .5s ease;
+    -moz-transition: width .5s ease;
+}
+.slide-in-out:hover:after 
+{
+    width: 100%;
+    background: transparent;
+    transition: all 0s ease;
+    -webkit-transition: width 0s ease;
+    -moz-transition: width .0s ease;
 }
 
 @media (max-width: 768px) {
@@ -181,12 +266,60 @@ nav .navbar-brand h3 {
 .modal-footer {
     border-top: 1px solid #434546;
 }
+
+.footer-container {
+    padding-top: 2rem;
+    text-align: center;
+}
+
+.footer-container a {
+    color: #9f35ff;
+}
+.footer-container a:hover {
+    text-decoration: none;
+}
+
+.footer-container ul {
+    padding: 0;
+}
+
+.footer-links li {
+    display: inline-block;
+}
+
+.footer-links li:not(:last-child):after {
+    content:"|";
+    padding: 0 10px;
+}
+
+.navbar-nav .nav-link, #navbar button {
+    font-size: 1.2rem;
+}
+
+.navbar-nav .nav-link {
+    padding: 1rem 1rem;
+}
+
+#navbar button {
+    margin: 1rem 1rem;
+}
+
+@media (min-width: 768px) {
+    .navbar-nav .nav-link {
+        padding: .5rem 1rem;
+        font-size: 1.2rem;
+    }
+    .footer-container {
+        text-align: left;
+    }
+}
 /*----- end of theme CSS -----*/
 
 
 /*----- start of index page CSS -----*/
 .index-container {
     background-color: #5f27cd;
+    padding-top: 5rem;
 }
 
 #banner-header-1 {
@@ -204,6 +337,14 @@ nav .navbar-brand h3 {
 .index-banner-text {
     font-size: 1.4rem;
     color: white;
+}
+
+.banner-col-1 {
+    text-align: left;
+}
+
+.banner-col-2 {
+    padding-top: 4rem;
 }
 
 #banner-header-2 {
@@ -229,15 +370,25 @@ nav .navbar-brand h3 {
 #banner-btn {
     font-size: 1.4rem;
     border-radius: 0.5rem;
-    padding: 0.5rem 2rem;
+    padding: 0.5rem 1.5rem;
     margin-top: 2rem;
+}
+
+#how-to-header, #we-do-header {
+    font-size: 3rem;
 }
 
 .how-to-number {
     font-weight: 800;
     font-size: 10rem;
     display: inline-block;
-    color: #5f27cd;
+    color: #9f35ff;
+    transform: translate(-60%, -40%);
+    position: absolute;
+}
+
+#how-to3 {
+    transform: translate(-20%, -40%); 
 }
 
 .how-to-subheader {
@@ -248,13 +399,18 @@ nav .navbar-brand h3 {
     position: relative;
 }
 
-#how-to3 {
-    transform: translate(-60%, -40%);
-    position: absolute;
+.step-section {
+    margin: 5rem 0rem;
 }
 
 .step-text {
-    padding-top: 10%;
+    padding-top: 20%;
+}
+
+.step-btn {
+    font-size: 1.4rem;
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
 }
 
 #step-image-3, #step-image-1 {
@@ -266,19 +422,124 @@ nav .navbar-brand h3 {
     text-align: left;
 }
 
+#we-do-header {
+    margin: 0 auto 5rem auto;
+    width: 80%;
+}
+
+#more-watching {
+    position: relative;
+    padding-bottom: 8px;
+    z-index: 1;
+}
+
+#more-watching::after {
+    content: "";
+    position: absolute;
+    left: 7%;
+    bottom: 8px;
+    width: 105%;
+    height: 14px;
+    transform: skew(-12deg) translateX(-5%);
+    background: #ff9f43;
+    z-index: -1;
+    opacity: 0.8;
+}
+
+.we-do-text {
+    font-size: 1.2rem;
+    text-align: left;
+    margin-top: 10px;
+}
+
+.we-do-column img {
+    padding: 5px;
+    width: 15%;
+    border-radius: .5rem;
+}
+
+.we-do-header {
+    color: #5f27cd;
+    margin-left: 20px;
+    font-size: 2rem;
+    font-weight: 600;
+    align-self: flex-end;
+}
+
+.we-do-info {
+    margin-bottom: 5rem;
+}
+
 @media (min-width: 768px) {
     #index-banner-header {
         font-size: 5rem;
     }
 
+    .banner-col-2 {
+        padding-top: 0rem;
+    }
+    
+
     #banner-header-2::after {
         bottom: 16px;
+    }
+
+    #how-to-header, #we-do-header {
+        font-size: 4rem;
+    }
+
+    #how-to3 {
+        transform: translate(-60%, -40%); 
+    }
+    
+    .step-text {
+        padding-top: 10%;
+    }
+
+    #step-text-1, #step-text-3, #step-text-4 {
+        padding-top: 7%
+    }
+
+    .we-do-column img {
+        width: 20%;
+    }
+
+    .we-do-header {
+        margin-left: 0px;
+    }
+
+    #more-watching::after {
+        bottom: 16px;
+    }
+
+    .we-do-header {
+    align-self: flex-start;
     }
 }
 /*----- end of index CSS -----*/
 
 
 /*----- start of show page CSS -----*/
+
+
+.show-container {
+    padding-top: 5rem;
+}
+
+.show-banner {
+    background: url("background-shapes-web.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: 100%;
+    padding-top: 8rem;
+    height: 400px;
+}
+
+.show-banner p {
+    font-size: 1.2rem;
+    width: 80%;
+    margin: auto;
+}
 
 .season-selection .btn[active], .season-selection .btn.active {
     background-color: #5f27cd !important;
@@ -374,6 +635,21 @@ nav .navbar-brand h3 {
     .dramaInfotempImage, .dramaModalImage {
         width: calc(100% - 2rem);
     }
+
+    .show-banner {
+        background: url("background-shapes2.png");
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: 100%;
+        padding-top: 10rem;
+        height: 400px;
+    }
+
+    .show-banner p {
+        font-size: 1.4rem;
+        width: 64%;
+        margin: auto;
+    }
 }
 
 #dramaInfoModalBody {
@@ -409,6 +685,11 @@ nav .navbar-brand h3 {
 
 #show-table, #watchlist-header {
     color: white;
+}
+
+#show-table thead {
+    background-color: #ff9f43;
+    color: #222f3e;
 }
 
 #show-table thead tr th:last-child, #show-table tbody tr td:last-child,
@@ -468,6 +749,7 @@ nav .navbar-brand h3 {
 
 .calendar-container {
     padding-bottom: 60px;
+    padding-top: 5rem;
 }
 
 #calendar-header, #watchlist-header {
@@ -586,11 +868,10 @@ nav .navbar-brand h3 {
 }
 
 .toast {
-    background-color: #17191b;
+    background-color: #f5f6fa;
 }
 
 .toast-header {
-    background-color: #09090a45;
     color: #1dd1a1;
 }
 
@@ -599,7 +880,7 @@ nav .navbar-brand h3 {
 }
 
 .toast-body {
-    color: white;
+    color: #17191b;
 }
 
 .close, .close:hover {
@@ -607,3 +888,79 @@ nav .navbar-brand h3 {
     opacity: 1;
     font-weight: 200;
 }
+
+.kalendar-alert-red a {
+    color: #17191b;
+}
+
+.alert {
+    padding: 5rem 1.25rem;
+}
+
+/* Start of about us page CSS */
+
+#about-header {
+    position: relative;
+    padding-bottom: 8px;
+    z-index: 1;
+    color: #17191b;
+    font-size: 3rem;
+}
+
+#about-header::after {
+    content: "";
+    position: absolute;
+    left: 7%;
+    bottom: 8px;
+    width: 105%;
+    height: 14px;
+    transform: skew(-12deg) translateX(-5%);
+    background: #5f27cd;
+    z-index: -1;
+    opacity: 0.8;
+}
+
+.about-container {
+    padding: 5rem 0 5rem 0;
+    background-color: #ff9f43;
+    color: #17191b;
+    text-align: left;
+}
+
+.about-container h2 {
+    color: white;
+    padding-top: 5rem;
+    font-size: 2.5rem;
+}
+
+.about-container p {
+    padding-top: 3rem;
+    font-size: 1.2rem;
+}
+
+.ps-icon-container {
+    position: absolute;
+}
+
+#ps-icon {
+    width: 80%;
+}
+
+.about-container a {
+    color: #5f27cd;
+}
+/* End of about us page CSS */
+
+/* Start of privacy page CSS */
+.privacy-container {
+    padding-top: 5rem;
+}
+
+.privacy-container h3, .privacy-container li, .privacy-container p {
+    text-align: left;
+}
+
+.privacy-container a{
+    color: #5f27cd;
+}
+/* End of privacy page CSS */

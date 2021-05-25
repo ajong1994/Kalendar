@@ -1,9 +1,7 @@
-import os
-import requests
-import urllib.parse
+import cloudscraper
 from crawl import crawl
 
-from flask import redirect, render_template, request
+from flask import render_template, request
 
 
 
@@ -24,14 +22,14 @@ def apology(message, code=400):
 def generate(year, quarter):
     """Look up list of dramas for the given year & quarter"""
 
-    # Contact API
-    url = f"https://kuryana.vercel.app/seasonal/{year}/{quarter}"
-    response = check_url(url)
+    # Crawl MDL Quarter Calendar
+    scraper = cloudscraper.create_scraper()
+    response = scraper.post("https://mydramalist.com/v1/quarter_calendar", data = { "quarter": quarter, "year": year }).json()
 
     # Parse response
     korean_shows = []
 
-    results = response.json()
+    results = response
     for result in results:
         result_info = {}
         ## Add filter for only airing dramas
@@ -84,7 +82,8 @@ def fetch(drama_url):
         info_parsed["aired_on"] = info_unparsed["data"]["details"].setdefault("aired_on", "N/A")
         if info_unparsed["data"]["details"]["aired_on"] == "N/A":
             info_parsed["aired_on"] = info_unparsed["data"]["details"].setdefault("airs_on", "N/A")
-        info_parsed["network"] = info_unparsed["data"]["details"].setdefault("original_network", "N/A")
+        # Copy network string into an list and split whenever there is a space
+        info_parsed["network"] = info_unparsed["data"]["details"].setdefault("original_network", "N/A")[0:len(info_unparsed["data"]["details"].setdefault("original_network", "N/A"))].split(" ")
         info_parsed["airing_time"] = info_unparsed["data"].setdefault("airing_time", "N/A")
         info_parsed["duration"] = info_unparsed["data"].setdefault("duration", "60")
         info_parsed["genres"] = info_unparsed["data"]["others"].setdefault("genres", "N/A")
@@ -93,10 +92,4 @@ def fetch(drama_url):
     except (KeyError, TypeError, ValueError):
         return 104
 
-def check_url(url):
-    try:
-        response = requests.get(url)
-        response.raise_for_status()
-        return response
-    except requests.RequestException:
-        return 102
+

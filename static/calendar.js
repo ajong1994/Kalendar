@@ -76,7 +76,6 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
     if (shows.length !== 0) {
         let thead = document.createElement("thead");
-        thead.setAttribute("class", "kalendar-bg-yellow");
         let table_row = document.createElement("tr");
         table_row.id = "table-row-0";
         table_header = [];
