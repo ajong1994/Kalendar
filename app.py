@@ -128,4 +128,3 @@ def errorhandler(e):
 for code in default_exceptions:
     app.errorhandler(code)(errorhandler)
 
-app.run(host='127.0.0.1', port=5000, ssl_context=('adhoc'))
