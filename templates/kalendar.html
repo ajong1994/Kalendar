@@ -6,7 +6,6 @@
 
 {% block main %}
 <div class="calendar-container kalendar-bg-dark">
-  <h2 class="container px-md-0 mb-4"id="calendar-header">Your Kalendar</h2>
   <div class="container px-0 calendar-section">
     <div id="calendar"></div>
   </div>
@@ -21,9 +20,8 @@
       You currently don't have any shows in your watch list. Browse the <a href="/shows">catalogue</a> to add some!
     </div>
     <div id="buttonContainers" class="d-flex pt-3 flex-column flex-md-row-reverse"> 
-      <button type="button" class="btn kalendar-bg-violet my-2" id="sync-btn" style="display:none">Sync to Google Calendar</button>
-      <button type="button" class="btn kalendar-bg-white ml-md-auto mr-md-2 my-2" id="clear-all-btn" style="display:none">Clear Watchlist</button>
-      <button type="button" class="btn kalendar-red mr-md-auto my-2" id="clearGoogle-btn" style="display:none">Delete Synced Calendar</button>
+      <button type="button" class="btn kalendar-bg-violet ml-md-auto my-2" id="sync-btn">Sync to Google Calendar</button>
+      <button type="button" class="btn kalendar-red mr-md-auto my-2" id="clearList-btn">Clear Watchlist</button>
     </div>
   </div>
 </div>
@@ -50,24 +48,47 @@
     </div>
   </div>
 </div>
-<!-- Modal for gmail delete -->
+<!-- Modal for show delete -->
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModal" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content kalendar-bg-dark">
         <div class="modal-header">
         <h5 class="modal-title" id="deleteModalLabel">
-            Delete show from Google Calendar too?
+            Are you sure you want to delete <span id="del-modal-show-title"></span>?
         </h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>
         </div>
         <div class="modal-body" id="deleteModalBody">
-            <div>If you press delete, Kalendar will look for the show in your Google Calendar and delete the matching events as well.</div>
+            <div>If you're logged into Google Calendar, the corresponding events will be deleted too.</div>
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn kalendar-red" id="delete-gcal-btn">Delete from Google</button>
+            <button type="button" class="btn kalendar-red" id="delete-show-btn">Delete</button>
+        </div>
+    </div>
+  </div>
+</div>
+<!-- Modal for entire list delete -->
+<div class="modal fade" id="clearListModal" tabindex="-1" aria-labelledby="clearListModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content kalendar-bg-dark">
+        <div class="modal-header">
+        <h5 class="modal-title" id="clearListModalLabel">
+            Are you sure you want to delete all shows?
+        </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+        <div class="modal-body" id="clearListModalBody">
+            <div>All existing KDramas from your watchlist will be removed. If you are logged in Google Calandar, your Kalendar and all show events will be 
+              cleared as well.</div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn kalendar-red" id="clearList-confirm">Delete</button>
         </div>
     </div>
   </div>
@@ -110,7 +131,7 @@
 </div>
 </div>
 <div aria-live="assertive" aria-atomic="true" role="alert">
-  <div id="FailDeleteToast" class="toast hide" aria-atomic="true" data-delay="2000" style="position: fixed; top: 66px; right: 0; z-index: 5;">
+  <div id="FailClearToast" class="toast hide" aria-atomic="true" data-delay="2000" style="position: fixed; top: 66px; right: 0; z-index: 5;">
     <div class="toast-header">
       <strong class="mr-auto">&#9940; &nbsp; Clear Failed</strong>
       <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
@@ -121,15 +142,15 @@
       You currently don't have a Kalendar on your Google Calendar.
     </div>
   </div>
-  <div id="FailAddToast" class="toast hide" aria-atomic="true" data-delay="2000" style="position: fixed; top: 66px; right: 0; z-index: 5;">
+  <div id="FailDelToast" class="toast hide" aria-atomic="true" data-delay="2000" style="position: fixed; top: 66px; right: 0; z-index: 5;">
     <div class="toast-header">
-      <strong class="mr-auto">&#9940; &nbsp; Sync Failed</strong>
+      <strong class="mr-auto">&#9940; &nbsp; Show Deletion Failed</strong>
       <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
     <div class="toast-body">
-      All shows in watchlist are already synced.
+      Show events not found on Google Calendar.
     </div>
   </div>
 </div>
