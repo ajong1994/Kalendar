@@ -79,21 +79,10 @@ function updateSigninStatus(isSignedIn) {
   if (isSignedIn) {
     loginButton.style.display = "none";
     logoutButton.style.display = "block";
-    if (document.getElementById("clearGoogle-btn") !== null) {
-      document.getElementById("clearGoogle-btn").style.display = "block";
-    }
     $("#accessModal").modal('hide')
-    // Add bootstrap toast to signify login
   } else {
-    try {
     loginButton.style.display = "block";
     logoutButton.style.display = "none";
-    document.getElementById("clearGoogle-btn").style.display = "none";
-    } catch (TypeError) {
-      
-    }
-    
-    // Add bootstrap toast to signify logout
   }
 }
 
@@ -172,6 +161,7 @@ async function sync_calendar() {
                   ],
                   "description": "Shown on " + shows[i].network.join(", ")
                 }
+
                 var add_request = gapi.client.calendar.events.insert({
                   "calendarId": calendar_id,
                   "resource": gcal_events
@@ -179,10 +169,9 @@ async function sync_calendar() {
 
                 add_request.execute(function(response){
                   $("#SuccessAddToast").toast("show");
+                  added = true;
                 }); 
-              } else {
-                $("#FailAddToast").toast("show");
-              }
+              } 
             }
           };
         };   
@@ -264,15 +253,18 @@ async function deletefrom_GCal(show_title) {
             // Create a function to add an event object to gcal_events array for every show in localbase
             // Currently uses count to add event instances but should change it to end date so that netflix shows only show up once
               if (showTitle in showList) {
-                var add_request = gapi.client.calendar.events.delete({
+                var del_request = gapi.client.calendar.events.delete({
                   "calendarId": calendar_id,
                   "eventId": showList[showTitle]
                 });
 
-                add_request.execute(function(response){
+                del_request.execute(function(response){
                   $("#deleteModal").modal('hide')
                   $("#SuccessDeleteToast").toast("show");
                 }); 
+              } else {
+                $("#deleteModal").modal('hide')
+                $("#FailDelToast").toast("show");
               } 
             
           };
@@ -300,7 +292,11 @@ async function deletefrom_GCal(show_title) {
         });
         getcalendarList.then(function(result) {
           delete_event(result)
+        }, function(reject) {
+          $("#deleteModal").modal('hide')
+          $("#FailClearToast").toast("show");
         });
+
       } else {
         console.log("Unauthorized.")
       }
@@ -347,8 +343,9 @@ function clear_GCal() {
         getcalendarList.then(function(resolve) {
           clear_cal(resolve)
         }, function(reject) {
-          $("#FailDeleteToast").toast("show");
+          $("#FailClearToast").toast("show");
         });
+
         function clear_cal(calendar_id) {
           var clear_request = gapi.client.calendar.calendars.delete({
             "calendarId": calendar_id,

@@ -47,12 +47,31 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Close tooltip when user clicks outside of the body from user28490 and kn0mad1c on https://stackoverflow.com/questions/11703093/how-to-dismiss-a-twitter-bootstrap-popover-by-clicking-outside
     $("html").on("mouseup", function (e) {
         var l = $(e.target);
-        if (l[0].className.indexOf("popover") == -1) {
-            $(".popover").each(function () {
-                $(this).popover("hide");
-            });
+        try {
+            if (l[0].className.indexOf("popover") == -1) {
+                $(".popover").each(function () {
+                    $(this).popover("hide");
+                });
+            }
+        } catch (TypeError) {
+            // Empty catch the errors that occur when a click is made on a non calendar event
+        }
+
+    });
+
+
+    // Click listener to adjust calendar height if the device is mobile and the view is grid and unset it otherwise
+    document.querySelector(".fc-dayGridMonth-button").addEventListener("click", function() {
+        if (mobileviewCheck()) {
+            calendar.setOption('contentHeight', "auto");
         }
     });
+    document.querySelector(".fc-listMonth-button").addEventListener("click", function() {
+        if (mobileviewCheck()) {
+            calendar.setOption('contentHeight', 400);
+        }
+    });
+    
 
     // Read show DB from localbase
     try {
@@ -88,8 +107,8 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
         let tbody = document.createElement("tbody");
         document.getElementById("show-table").append(tbody);
-        document.getElementById("clear-all-btn").style.display = "block";
         document.getElementById("sync-btn").style.display = "block";
+        document.getElementById("clearList-btn").style.display = "block";
     } else {
         document.getElementById("show-table").remove();
         document.getElementById("calendar-alert").hidden = false;
@@ -102,57 +121,60 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     var removebutton = document.getElementsByClassName("calendar-remove");
     var counter = 0;
+    var table_row_id = 0;
     for (let i = removebutton.length - 1; i >= 0; i--) {
         removebutton[i].addEventListener("click", function() {
-            let table_row_id = "table-row-" + [i + 1]
-            let showTitle = removebutton[i].value
-            if (GoogleAuth.isSignedIn.get()) {
-                $("#deleteModal").modal('show')
-                document.getElementById("delete-gcal-btn").setAttribute("value", showTitle);
-            }
-            // Delete show from DB before deleting the element so that calling the removebutton doesn't return undefined
-            db.collection("shows").doc({ title: showTitle }).delete()
-            // Can't delete the row because it would include the button and shorten the array, thereby changing the index so hide rows instead
-            temp_row = document.getElementById(table_row_id);
-            while (temp_row.children.length > 1) {
-                temp_row.removeChild(temp_row.firstChild)
-            }
-            temp_row.hidden = true; 
-            // Remove show events from calendar
-            while (calendar.getEventById(showTitle)) {
-                calendar.getEventById(showTitle).remove()
-            }
-            counter = counter + 1;
-
-            // If all rows are hidden (kept track of by using counter), delete header and table then show alert.
-            if ( counter === removebutton.length ){
-                document.getElementById("show-table").remove();
-                document.getElementById("calendar-alert").hidden = false;
-                document.getElementById("buttonContainers").remove()
-            }
+            table_row_id = "table-row-" + [i + 1]
+            let showInfo = removebutton[i].value;
+            document.getElementById("del-modal-show-title").textContent = showInfo.split("/*/")[1];
+            document.getElementById("delete-show-btn").setAttribute("value", showInfo);
+            $("#deleteModal").modal('show');
         });
     };
 
     // Click listeners for the show table buttons and modals
     document.getElementById("sync-btn").addEventListener("click", sync_calendar);
-    document.getElementById("clear-all-btn").addEventListener("click", clear_localcalendar);
-    document.getElementById("clearGoogle-btn").addEventListener("click", clear_GCal);
-    document.getElementById("delete-gcal-btn").addEventListener("click", function() {
-        deletefrom_GCal(this.value)
+    document.getElementById("clearList-btn").addEventListener("click", function() {
+        $("#clearListModal").modal('show');
     });
+    document.getElementById("clearList-confirm").addEventListener("click", function(){
+        if (GoogleAuth.isSignedIn.get()) {
+            clear_GCal();
+        }
+        db.collection("shows").delete();
+        document.getElementById("show-table").remove();
+        document.getElementById("calendar-alert").hidden = false;
+        document.getElementById("buttonContainers").remove();
+        $("#clearListModal").modal('hide')
+    });
+    document.getElementById("delete-show-btn").addEventListener("click", function() {
+        let showTitle = this.value.split("/*/")[1]
+        let showId = this.value.split("/*/")[0];
+        if (GoogleAuth.isSignedIn.get()) {
+            deletefrom_GCal(showTitle);
+        }
+        // Delete show from DB before deleting the element so that calling the removebutton doesn't return undefined
+        db.collection("shows").doc({ title: showTitle }).delete()
+        // Can't delete the row because it would include the button and shorten the array, thereby changing the index so hide rows instead
+        temp_row = document.getElementById(table_row_id);
+        while (temp_row.children.length > 1) {
+            temp_row.removeChild(temp_row.firstChild)
+        }
+        temp_row.hidden = true; 
+        // Remove show events from calendar
+        while (calendar.getEventById(showId)) {
+            calendar.getEventById(showId).remove()
+        }
+        counter = counter + 1;
 
-    // Click listener to adjust calendar height if the device is mobile and the view is grid and unset it otherwise
-    document.querySelector(".fc-dayGridMonth-button").addEventListener("click", function() {
-        if (mobileviewCheck()) {
-            calendar.setOption('contentHeight', "auto");
+        // If all rows are hidden (kept track of by using counter), delete header and table then show alert.
+        if ( counter === removebutton.length ){
+            document.getElementById("show-table").remove();
+            document.getElementById("calendar-alert").hidden = false;
+            document.getElementById("buttonContainers").remove()
         }
+
     });
-    document.querySelector(".fc-listMonth-button").addEventListener("click", function() {
-        if (mobileviewCheck()) {
-            calendar.setOption('contentHeight', 500);
-        }
-    });
-    
 });
 
 
@@ -172,7 +194,7 @@ function render_row([key, value]) {
     Object.assign(remove_button_td, {
         type: "button",
         className: "calendar-remove",
-        value: value.title
+        value: value.id + "/*/" + value.title
     })
     var svg = document.createElementNS("http://www.w3.org/2000/svg","svg");
     var svgWidth = 16;
@@ -223,12 +245,6 @@ function addEvent([key, value]) {
     }
 }
 
-function clear_localcalendar() {
-    db.collection("shows").delete()
-    document.getElementById("show-table").remove();
-    document.getElementById("calendar-alert").hidden = false;
-    document.getElementById("buttonContainers").remove()
-}
 
 
 

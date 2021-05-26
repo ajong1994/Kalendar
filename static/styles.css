@@ -460,7 +460,8 @@ nav .navbar-brand h3 {
 
 .we-do-column img {
     padding: 5px;
-    width: 15%;
+    width: 38px;
+    height: 38px;
     border-radius: .5rem;
 }
 
@@ -519,7 +520,8 @@ nav .navbar-brand h3 {
     }
 
     .we-do-column img {
-        width: 20%;
+        width: 48px;
+        height: 48px;
     }
 
     .we-do-subheader {
@@ -733,20 +735,9 @@ nav .navbar-brand h3 {
     padding-bottom: 3rem;
 }
 
-@media (max-width: 768px) {
-    #show-table thead tr th:first-child, #show-table tbody tr td:first-child,
-    #show-table thead tr th:nth-child(3), #show-table tbody tr td:nth-child(3),
-    #show-table thead tr th:nth-child(4), #show-table tbody tr td:nth-child(4),
-    #show-table thead tr th:nth-child(5), #show-table tbody tr td:nth-child(5) {
-        display:none;
-    }
-
-    #buttonContainers button {
-        font-size: 1rem;
-        line-height: 2;
-    }
+#sync-btn, #clearList-btn {
+    display: none;
 }
-
 
 #show-table tbody tr td:nth-child(2), #show-table tbody {
     background-color: #17191b;
@@ -784,31 +775,20 @@ nav .navbar-brand h3 {
 
 .calendar-container {
     padding-bottom: 60px;
-    padding-top: 8rem;
+    padding-top: 6rem;
 }
 
-#calendar-header, #watchlist-header {
+#watchlist-header {
     text-align: left;
+    font-size: 1.5rem;
 }
 
 .calendar-section {
     background: #09090a45;
 }
 
-@media (min-width: 768px) {
-    .calendar-section {
-        border-radius: .5rem;
-    }
-}
-
 #calendar {
     padding: 0 15px;
-}
-
-@media (min-width: 768px) {
-    #calendar {
-        padding: 3rem;
-    }
 }
 
 .fc-button-primary {
@@ -858,6 +838,10 @@ nav .navbar-brand h3 {
 
  .fc-toolbar-title,.fc-event-title {
     color: white !important;
+ }
+
+ .fc .fc-toolbar-title {
+     font-size: 1.5rem !important;
  }
 
  .fc-event-time, .fc-list-event-time, .fc-day-today .fc-event-time  {
@@ -937,6 +921,41 @@ nav .navbar-brand h3 {
 .alert {
     padding: 5rem 1.25rem;
 }
+
+
+@media (min-width: 768px) {
+    #calendar {
+        padding: 3rem;
+    }
+
+    .calendar-section {
+        border-radius: .5rem;
+    }
+
+    .fc .fc-toolbar-title {
+        font-size: 1.75rem !important;
+    }
+
+    #watchlist-header {
+        text-align: left;
+        font-size: 1.75rem;
+    }
+}
+
+@media (max-width: 768px) {
+    #show-table thead tr th:first-child, #show-table tbody tr td:first-child,
+    #show-table thead tr th:nth-child(3), #show-table tbody tr td:nth-child(3),
+    #show-table thead tr th:nth-child(4), #show-table tbody tr td:nth-child(4),
+    #show-table thead tr th:nth-child(5), #show-table tbody tr td:nth-child(5) {
+        display:none;
+    }
+
+    #buttonContainers button {
+        font-size: 1rem;
+        line-height: 2;
+    }
+}
+
 
 /* Start of about us page CSS */
 
