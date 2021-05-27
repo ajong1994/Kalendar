@@ -7,7 +7,8 @@ import re
 
 
 
-
+# First part of scraper modified from shane-tw's own scraper: https://github.com/shane-tw/MyDramaList-Scraper-Parser
+# The rest of the scraper is from TheBoringDude's vercel app code base: https://github.com/TheBoringDude/kuryana
 def crawl(slug):
     drama_info = {}
     drama_info["synopsis"] = "N/A"

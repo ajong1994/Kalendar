@@ -2,7 +2,7 @@
 $('.toast').toast()
 
 // Client ID and API key via AJAX call from server
-
+// API code base built on Google API's example code: https://developers.google.com/calendar/quickstart/js
 var CLIENT_ID1;
 var CLIENT_ID2;
 var API_KEY;
@@ -22,9 +22,6 @@ function get_env(){
     }
   });
 }
-
-
-
 
 
 // Array of API discovery doc URLs for APIs used by the quickstart
