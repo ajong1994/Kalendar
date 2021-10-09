@@ -20,19 +20,42 @@ def year_now():
     return now_local.year
 
 def quarter_next1():
-    if ((int(now_local.month / 3 ) + (now_local.month % 3 > 0) + 1) > 4):
+    current_quarter = quarter_now()
+    if ((current_quarter + 1) > 4):
         quarter1 = 1
     else: 
-        quarter1 = int(now_local.month / 3 ) + (now_local.month % 3 > 0) + 1
+        quarter1 = current_quarter + 1
     return quarter1
  
 
 def quarter_next2():
-    if ((int(now_local.month / 3 ) + (now_local.month % 3 > 0) + 2) > 4):
-        quarter2 = (int(now_local.month / 3 ) + (now_local.month % 3 > 0) + 2) % 4
+    current_quarter = quarter_now()
+    if ((current_quarter + 2) > 4):
+        quarter2 = (current_quarter + 2) % 4
     else: 
-        quarter2 = int(now_local.month/ 3 ) + (now_local.month % 3 > 0) + 2
+        quarter2 = current_quarter + 2
+    return quarter2
+
+def quarter_prev1():
+    current_quarter = quarter_now()
+    if ((current_quarter - 1) < 1):
+        quarter1 = 4
+    else: 
+        quarter1 = quarter_now() - 1 
+    return quarter1
+ 
+
+def quarter_prev2():
+    current_quarter = quarter_now()
+    if ((current_quarter - 2) < 1):
+        quarter2 = (current_quarter - 2) + 4
+    else: 
+        quarter2 = quarter_now() - 2
     return quarter2
 
 def year_next():
     return int(now_local.year + 1)
+
+def year_prev():
+    return int(now_local.year - 1)
+
