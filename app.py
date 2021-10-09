@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 from flask import Flask, render_template, request, session, jsonify
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from helper import apology, generate, fetch
-from getDate import year_now, quarter_now, year_next, quarter_next1, quarter_next2
+from getDate import year_now, quarter_now, year_next, quarter_next1, quarter_next2, quarter_prev1, quarter_prev2, year_prev
 from flask_talisman import Talisman
 
 # Load GAPI credentials from env
@@ -69,7 +69,7 @@ def refresh():
     selected_period = request.json["list"]
     if selected_period == "current":
         show_list = generate(year_now(), quarter_now())
-    else: 
+    elif selected_period == "upcoming": 
         if quarter_now() == 3:
             show_list1 = generate(year_now(), quarter_next1())
             show_list2 = generate(year_next(), quarter_next2())
@@ -81,6 +81,19 @@ def refresh():
         else: 
             show_list1 = generate(year_now(), quarter_next1())
             show_list2 = generate(year_now(), quarter_next2())
+            show_list = show_list1 + show_list2
+    else: 
+        if quarter_now() == 2:
+            show_list1 = generate(year_now(), quarter_prev1())
+            show_list2 = generate(year_prev(), quarter_prev2())
+            show_list = show_list1 + show_list2
+        elif quarter_now() == 1:
+            show_list1 = generate(year_prev(), quarter_prev2())
+            show_list2 = generate(year_prev(), quarter_prev1())
+            show_list = show_list1 + show_list2
+        else: 
+            show_list1 = generate(year_now(), quarter_prev1())
+            show_list2 = generate(year_now(), quarter_prev2())
             show_list = show_list1 + show_list2
     return jsonify(show_list)
 
@@ -127,4 +140,3 @@ def errorhandler(e):
 # Listen for errors
 for code in default_exceptions:
     app.errorhandler(code)(errorhandler)
-
