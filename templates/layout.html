@@ -48,8 +48,8 @@
                             <li class="nav-item"><a class="nav-link mr-md-4 slide-in-out" href="/about-us">About Us</a></li>
                         </ul>        
                         <!--Add buttons to initiate auth sequence and sign out-->
-                        <!-- <button id="login_button" style="display: none" class="btn kalendar-white-hollow">Authorize Google</button>
-                        <button id="logout_button" style="display: none" class="btn kalendar-white-hollow">Logout</button> -->
+                        <button id="login_button" style="display: none" class="btn kalendar-white-hollow">Authorize Google</button>
+                        <button id="logout_button" style="display: none" class="btn kalendar-white-hollow">Logout</button>
                 </div>
             </nav>
         </header>
@@ -57,12 +57,12 @@
         <main>
             {% block main %}{% endblock %}
             <!-- Google API script -->
-            <!-- <script src="static/oauth.js"></script> -->
+            <script src="static/oauth.js"></script>
             <script src="static/theme.js"></script>
-            <!-- <script async defer src="https://apis.google.com/js/api.js"
+            <script async defer src="https://apis.google.com/js/api.js"
             onload="this.onload=function(){};get_env()"
             onreadystatechange="if (this.readyState === 'complete') this.onload()">
-            </script> -->
+            </script>
         </main>
 
         <footer class="footer-container kalendar-bg-darker">

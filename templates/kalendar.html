@@ -20,7 +20,7 @@
       You currently don't have any shows in your watch list. Browse the <a href="/shows">catalogue</a> to add some!
     </div>
     <div id="buttonContainers" class="d-flex pt-3 flex-column flex-md-row-reverse"> 
-      <!-- <button type="button" class="btn kalendar-bg-violet ml-md-auto my-2" id="sync-btn">Sync to Google Calendar</button> -->
+      <button type="button" class="btn kalendar-bg-violet ml-md-auto my-2" id="sync-btn">Sync to Google Calendar</button>
       <button type="button" class="btn kalendar-red mr-md-auto my-2" id="clearList-btn">Clear Watchlist</button>
     </div>
   </div>
@@ -60,9 +60,9 @@
             <span aria-hidden="true">&times;</span>
         </button>
         </div>
-        <!-- <div class="modal-body" id="deleteModalBody">
+        <div class="modal-body" id="deleteModalBody">
             <div>If you're logged into Google Calendar, the corresponding events will be deleted too.</div>
-        </div> -->
+        </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             <button type="button" class="btn kalendar-red" id="delete-show-btn">Delete</button>
@@ -83,7 +83,8 @@
         </button>
         </div>
         <div class="modal-body" id="clearListModalBody">
-            <div>All existing KDramas from your watchlist will be removed.</div>
+            <div>All existing KDramas from your watchlist will be removed. If you are logged in Google Calandar, your Kalendar and all show events will be 
+              cleared as well.</div>
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
