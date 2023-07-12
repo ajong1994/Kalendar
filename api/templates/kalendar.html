@@ -1,0 +1,172 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    My Kalendar
+{% endblock %}
+
+{% block main %}
+<div class="calendar-container kalendar-bg-dark">
+  <div class="container px-0 calendar-section">
+    <div id="calendar"></div>
+  </div>
+</div>
+<div class="kalendar-bg-darker table-container">
+  <div class="container px-md-0 py-5">
+    <h2 class="container px-md-0 mb-4 kalendar-white"id="watchlist-header">Watchlist</h2>
+    <div class="table-responsive">
+      <table id="show-table" class="table"></table>
+    </div>
+    <div class="alert kalendar-alert-red" id="calendar-alert" role="alert" hidden>
+      You currently don't have any shows in your watch list. Browse the <a href="/shows">catalogue</a> to add some!
+    </div>
+    <div id="buttonContainers" class="d-flex pt-3 flex-column flex-md-row-reverse"> 
+      <button type="button" class="btn kalendar-bg-violet ml-md-auto my-2" id="sync-btn">Sync to Google Calendar</button>
+      <button type="button" class="btn kalendar-red mr-md-auto my-2" id="clearList-btn">Clear Watchlist</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal for verification -->
+<div class="modal fade" id="accessModal" tabindex="-1" aria-labelledby="accessModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content kalendar-bg-dark">
+        <div class="modal-header">
+        <h5 class="modal-title" id="accessModalLabel">
+            Access Authorization
+        </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+        <div class="modal-body" id="accessModalBody">
+            <div> Kalendar needs permission to access your Google Calendar. Syncing and deleting events will not be possible unless you are logged in and authorize our use of your information.</div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn kalendar-bg-violet" id="access-btn">Grant Access</button>
+        </div>
+    </div>
+  </div>
+</div>
+<!-- Modal for show delete -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content kalendar-bg-dark">
+        <div class="modal-header">
+        <h5 class="modal-title" id="deleteModalLabel">
+            Are you sure you want to delete <span id="del-modal-show-title"></span>?
+        </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+        <div class="modal-body" id="deleteModalBody">
+            <div>If you're logged into Google Calendar, the corresponding events will be deleted too.</div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn kalendar-red" id="delete-show-btn">Delete</button>
+        </div>
+    </div>
+  </div>
+</div>
+<!-- Modal for entire list delete -->
+<div class="modal fade" id="clearListModal" tabindex="-1" aria-labelledby="clearListModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content kalendar-bg-dark">
+        <div class="modal-header">
+        <h5 class="modal-title" id="clearListModalLabel">
+            Are you sure you want to delete all shows?
+        </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+        <div class="modal-body" id="clearListModalBody">
+            <div>All existing KDramas from your watchlist will be removed. If you are logged in Google Calandar, your Kalendar and all show events will be 
+              cleared as well.</div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn kalendar-red" id="clearList-confirm">Delete</button>
+        </div>
+    </div>
+  </div>
+</div>
+<!-- Toasts -->
+<div aria-live="polite" aria-atomic="true">
+  <div id="SuccessAddToast" class="toast hide" aria-atomic="true" data-delay="2000" style="position: fixed; top: 66px; right: 0; z-index: 5;">
+    <div class="toast-header">
+      <strong class="mr-auto">&#127881; &nbsp; Sync Success</strong>
+      <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="toast-body">
+      You've successfully added new shows to your Kalendar on Google Calendar!
+    </div>
+  </div>
+  <div id="SuccessClearToast" class="toast hide" aria-atomic="true" data-delay="2000" style="position: fixed; top: 66px; right: 0; z-index: 5;">
+    <div class="toast-header">
+      <strong class="mr-auto">&#127881; &nbsp; Delete Success</strong>
+      <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="toast-body">
+      You've successfully cleared your Kalendar on Google Calendar.
+    </div>
+  </div>
+  <div id="SuccessDeleteToast" class="toast hide" aria-atomic="true" data-delay="2000" style="position: fixed; top: 66px; right: 0; z-index: 5;">
+    <div class="toast-header">
+      <strong class="mr-auto">&#127881; &nbsp; Delete Success</strong>
+      <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="toast-body">
+      You've successfully deleted this drama from your calendar.
+    </div>
+  </div>
+</div>
+</div>
+<div aria-live="assertive" aria-atomic="true" role="alert">
+  <div id="FailClearToast" class="toast hide" aria-atomic="true" data-delay="2000" style="position: fixed; top: 66px; right: 0; z-index: 5;">
+    <div class="toast-header">
+      <strong class="mr-auto">&#9940; &nbsp; Clear Failed</strong>
+      <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="toast-body">
+      You currently don't have a Kalendar on your Google Calendar.
+    </div>
+  </div>
+  <div id="FailDelToast" class="toast hide" aria-atomic="true" data-delay="2000" style="position: fixed; top: 66px; right: 0; z-index: 5;">
+    <div class="toast-header">
+      <strong class="mr-auto">&#9940; &nbsp; Show Deletion Failed</strong>
+      <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="toast-body">
+      Show events not found on Google Calendar.
+    </div>
+  </div>
+</div>
+
+
+  <script src="static/calendar.js"></script>
+
+  <!-- fullcalendar.io -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.6.0/main.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.6.0/main.min.js"></script>
+  
+  <!-- rrule lib -->
+  <script src="https://cdn.jsdelivr.net/npm/rrule@2.6.6/dist/es5/rrule.min.js"></script>
+
+  <!-- the rrule-to-fullcalendar connector. must go AFTER the rrule lib -->
+  <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/rrule@5.6.0/main.global.min.js'></script>
+{% endblock %}
+
+
