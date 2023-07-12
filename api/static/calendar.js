@@ -107,7 +107,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
         let tbody = document.createElement("tbody");
         document.getElementById("show-table").append(tbody);
-        document.getElementById("sync-btn").style.display = "block";
+        // document.getElementById("sync-btn").style.display = "block";
         document.getElementById("clearList-btn").style.display = "block";
     } else {
         document.getElementById("show-table").remove();
@@ -133,26 +133,34 @@ document.addEventListener('DOMContentLoaded', async function() {
     };
 
     // Click listeners for the show table buttons and modals
-    document.getElementById("sync-btn").addEventListener("click", sync_calendar);
+    // document.getElementById("sync-btn").addEventListener("click", sync_calendar);
     document.getElementById("clearList-btn").addEventListener("click", function() {
         $("#clearListModal").modal('show');
     });
     document.getElementById("clearList-confirm").addEventListener("click", function(){
-        if (GoogleAuth.isSignedIn.get()) {
-            clear_GCal();
-        }
+        // if (GoogleAuth.isSignedIn.get()) {
+        //     clear_GCal();
+        // }
         db.collection("shows").delete();
         document.getElementById("show-table").remove();
         document.getElementById("calendar-alert").hidden = false;
         document.getElementById("buttonContainers").remove();
+
+        // Delete all events
+        let calEvents = calendar.getEvents();
+        for (const event of calEvents) {
+            event.remove();
+        }
         $("#clearListModal").modal('hide')
     });
     document.getElementById("delete-show-btn").addEventListener("click", function() {
         let showTitle = this.value.split("/*/")[1]
         let showId = this.value.split("/*/")[0];
-        if (GoogleAuth.isSignedIn.get()) {
-            deletefrom_GCal(showTitle);
-        }
+        // if (GoogleAuth.isSignedIn.get()) {
+        //     deletefrom_GCal(showTitle);
+        // }
+        $("#deleteModal").modal('hide')
+        $("#SuccessDeleteToast").toast("show");
         // Delete show from DB before deleting the element so that calling the removebutton doesn't return undefined
         db.collection("shows").doc({ title: showTitle }).delete()
         // Can't delete the row because it would include the button and shorten the array, thereby changing the index so hide rows instead

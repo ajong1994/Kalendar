@@ -1,6 +1,6 @@
 import os
 import json
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 from flask import Flask, render_template, request, session, jsonify
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from helper import apology, generate, fetch
@@ -8,7 +8,7 @@ from getDate import year_now, quarter_now, year_next, quarter_next1, quarter_nex
 from flask_talisman import Talisman
 
 # Load GAPI credentials from env
-load_dotenv()
+# load_dotenv()
 
 
 # Configure application
@@ -120,9 +120,9 @@ def login():
 def index():
     if request.method == "POST":
         credentials = {}
-        credentials["GC_ID1"] = os.getenv('GC_CLIENT_ID1')
-        credentials["GC_ID2"] = os.getenv('GC_CLIENT_ID2')
-        credentials["API_SECRET"] = os.getenv('API_KEY')
+        # credentials["GC_ID1"] = os.getenv('GC_CLIENT_ID1')
+        # credentials["GC_ID2"] = os.getenv('GC_CLIENT_ID2')
+        # credentials["API_SECRET"] = os.getenv('API_KEY')
         return jsonify(credentials)
     else:
         return render_template("index.html")
@@ -140,3 +140,6 @@ def errorhandler(e):
 # Listen for errors
 for code in default_exceptions:
     app.errorhandler(code)(errorhandler)
+
+if __name__ == '__main__':
+    app.run(ssl_context='adhoc', debug=True)
