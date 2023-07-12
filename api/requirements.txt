@@ -10,7 +10,7 @@ click==7.1.2
 cloudscraper==1.2.58
 cryptography==3.4.7
 decorator==5.0.7
-Flask==1.1.2
+Flask==2.3.2
 httplib2==0.19.1
 idna==2.10
 ipykernel==5.5.3
