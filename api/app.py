@@ -1,11 +1,11 @@
-import os
+# import os
 import json
 # from dotenv import load_dotenv
 from flask import Flask, render_template, request, session, jsonify
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from helper import apology, generate, fetch
 from getDate import year_now, quarter_now, year_next, quarter_next1, quarter_next2, quarter_prev1, quarter_prev2, year_prev
-from flask_talisman import Talisman
+# from flask_talisman import Talisman
 
 # Load GAPI credentials from env
 # load_dotenv()
@@ -31,7 +31,7 @@ csp = {
     ],
     'font-src': ['\'self\'', '*', 'blob:', 'data:']
 }
-talisman = Talisman(app, content_security_policy=csp)
+# talisman = Talisman(app, content_security_policy=csp)
 
 
 
@@ -141,5 +141,5 @@ def errorhandler(e):
 for code in default_exceptions:
     app.errorhandler(code)(errorhandler)
 
-if __name__ == '__main__':
-    app.run(ssl_context='adhoc', debug=True)
+# if __name__ == '__main__':
+#     app.run(ssl_context='adhoc', debug=True)
